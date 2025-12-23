@@ -4,7 +4,6 @@ import {
   Search, 
   Clock, 
   Users, 
-  ChevronRight, 
   CheckCircle2, 
   ArrowLeft, 
   BookOpen, 
@@ -12,7 +11,7 @@ import {
   Info
 } from 'lucide-react';
 
-// --- DEFINICIÓN DE TIPOS (Para corregir errores de TypeScript) ---
+// --- DEFINICIÓN DE TIPOS ---
 interface Ingredient {
   text: string;
   group: string;
