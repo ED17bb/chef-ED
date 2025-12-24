@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { 
-  ChefHat, 
   Search, 
   Clock, 
   Users, 
@@ -9,7 +8,6 @@ import {
   BookOpen, 
   Flame,
   Info,
-  ChevronRight,
   Filter
 } from 'lucide-react';
 
@@ -41,8 +39,8 @@ const INITIAL_RECIPES: Recipe[] = [
     prep: "4h",
     servings: "2P",
     difficulty: "Experto",
-    // Imagen corregida: Pan artesanal relleno (adiós pochoclos)
-    image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800",
+    // Imagen: Pan horneado relleno tradicional
+    image: "https://images.unsplash.com/photo-1598143153002-f88a21d31ec1?auto=format&fit=crop&q=80&w=800",
     ingredients: [
       { text: "500-800 gr Harina 000", group: "Masa" },
       { text: "260 ml Agua", group: "Masa" },
@@ -145,17 +143,15 @@ const INITIAL_RECIPES: Recipe[] = [
 
 const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
+  // Filtro simplificado (sin estado de búsqueda para evitar errores de compilación)
   const filteredRecipes = useMemo(() => {
-    return INITIAL_RECIPES.filter(r => 
-      r.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm]);
+    return INITIAL_RECIPES;
+  }, []);
 
   const Dashboard = () => (
     <div className="flex flex-col h-screen bg-[#050505] overflow-hidden">
-      {/* Header Minimalista y Profesional */}
+      {/* Header Minimalista corregido sin variables no usadas */}
       <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-zinc-900">
         <div className="flex items-center gap-3">
           <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
@@ -167,7 +163,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Bienvenida - Reducido para ahorrar espacio */}
+      {/* Hero Bienvenida */}
       <div className="px-6 pt-10 pb-6">
         <p className="text-zinc-500 text-[10px] font-bold tracking-widest uppercase mb-2">Workspace</p>
         <h2 className="text-3xl font-bold text-white tracking-tighter">
@@ -175,7 +171,7 @@ const App: React.FC = () => {
         </h2>
       </div>
 
-      {/* Lista de Recetas - Imágenes de 3x3 cm (80px) */}
+      {/* Lista de Recetas - Imágenes cuadradas de 80px (~3x3 cm) */}
       <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-12">
         {filteredRecipes.map((recipe) => (
           <div 
@@ -196,7 +192,7 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Imagen Cuadrada Pequeña (Aprox 3x3 cm) */}
+            {/* Imagen Cuadrada Pequeña */}
             <div className="relative w-20 h-20 shrink-0 rounded-2xl overflow-hidden shadow-xl border border-white/5">
               <img 
                 src={recipe.image} 
@@ -216,7 +212,6 @@ const App: React.FC = () => {
 
     return (
       <div className="h-screen bg-black overflow-hidden flex flex-col animate-in fade-in slide-in-from-right duration-400">
-        {/* Header Detalle - Visual Minimalista */}
         <div className="relative h-[35vh] shrink-0">
           <img src={recipe.image} className="w-full h-full object-cover" alt="" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/60" />
@@ -235,9 +230,7 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Scroll de Instrucciones */}
         <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-32">
-          {/* Stats Simplificados */}
           <div className="flex justify-between items-center border-b border-zinc-900 pb-8">
             <div className="flex flex-col items-center gap-1">
               <Clock size={16} className="text-zinc-600" />
@@ -253,7 +246,6 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          {/* Ingredientes */}
           <section>
             <div className="flex items-center gap-2 mb-6">
               <BookOpen className="text-orange-500" size={18} />
@@ -269,7 +261,7 @@ const App: React.FC = () => {
                   }`}
                 >
                   <span className={`text-sm ${checked[`i-${i}`] ? 'line-through' : 'text-zinc-200'}`}>{ing.text}</span>
-                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${checked[`i-${i}`] ? 'bg-orange-500 border-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.4)]' : 'border-zinc-700'}`}>
+                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${checked[`i-${i}`] ? 'bg-orange-500 border-orange-500' : 'border-zinc-700'}`}>
                     {checked[`i-${i}`] && <CheckCircle2 size={12} className="text-black" />}
                   </div>
                 </div>
@@ -277,7 +269,6 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          {/* Preparación con Línea de Tiempo */}
           <section>
             <div className="flex items-center gap-2 mb-8">
               <Flame className="text-orange-500" size={18} />
@@ -292,7 +283,7 @@ const App: React.FC = () => {
                   className={`relative transition-opacity ${checked[`s-${i}`] ? 'opacity-20' : ''}`}
                 >
                   <div className={`absolute -left-[1.35rem] top-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border bg-black ${
-                    checked[`s-${i}`] ? 'border-orange-500 text-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.3)]' : 'border-zinc-800 text-zinc-600'
+                    checked[`s-${i}`] ? 'border-orange-500 text-orange-500' : 'border-zinc-800 text-zinc-600'
                   }`}>
                     {i + 1}
                   </div>
@@ -304,7 +295,6 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          {/* Tips */}
           <div className="bg-zinc-900/50 p-6 rounded-3xl border border-orange-500/10 mb-20">
             <div className="flex items-center gap-2 mb-3">
               <Info size={14} className="text-orange-500" />
@@ -316,9 +306,11 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Botón de Acción Flotante */}
         <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
-          <button className="w-full bg-orange-500 text-black font-black py-4 rounded-2xl shadow-[0_10px_20px_rgba(249,115,22,0.2)] uppercase tracking-widest text-[11px] active:scale-95 transition-transform">
+          <button 
+            onClick={() => setSelectedRecipe(null)}
+            className="w-full bg-orange-500 text-black font-black py-4 rounded-2xl shadow-[0_10px_20px_rgba(249,115,22,0.2)] uppercase tracking-widest text-[11px] active:scale-95 transition-transform"
+          >
              Cerrar Receta
           </button>
         </div>
