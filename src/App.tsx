@@ -8,7 +8,8 @@ import {
   BookOpen, 
   Flame,
   Info,
-  Filter
+  Filter,
+  Sparkles
 } from 'lucide-react';
 
 // --- DEFINICIÓN DE TIPOS ---
@@ -24,55 +25,40 @@ interface Recipe {
   prep: string;
   servings: string;
   difficulty: string;
-  image: string;
+  image: string; // Sustituimos ilustración por URL de imagen digital
   ingredients: Ingredient[];
   steps: string[];
   tip: string;
+  color: string; // Color temático para contrastes neón
 }
 
-// --- DATA CURADA ---
+// --- DATA CURADA CON TUS NUEVAS ILUSTRACIONES ---
 const INITIAL_RECIPES: Recipe[] = [
   {
-    id: 'jamon',
-    title: "Pan de Jamón",
-    category: "FESTIVOS",
-    prep: "4h",
-    servings: "2P",
-    difficulty: "Experto",
-    // Imagen: Foto genérica de pan artesanal de alta calidad
-    image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&q=80&w=800",
+    id: 'matilda',
+    title: "Torta Matilda",
+    category: "POSTRES",
+    prep: "1h",
+    servings: "10P",
+    difficulty: "Fácil",
+    color: "#ec4899", // Magenta Neón
+    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=800",
     ingredients: [
-      { text: "500-800 gr Harina 000", group: "Masa" },
-      { text: "260 ml Agua", group: "Masa" },
-      { text: "60 gr Azúcar", group: "Masa" },
-      { text: "100 gr Margarina", group: "Masa" },
-      { text: "2 Huevos", group: "Masa" },
-      { text: "10 gr Levadura", group: "Masa" },
-      { text: "10 gr Sal", group: "Masa" },
-      { text: "150 gr Aceitunas", group: "Relleno" },
-      { text: "150 gr Pasas", group: "Relleno" },
-      { text: "1 Kg Jamón", group: "Relleno" },
-      { text: "250 gr Panceta", group: "Relleno" },
-      { text: "Queso Crema (Opcional)", group: "Relleno" }
+      { text: "3 Huevos / 200gr Azúcar", group: "Base" },
+      { text: "100 gr Mantequilla derretida", group: "Base" },
+      { text: "280 gr Harina / 100 gr Chocolate", group: "Secos" },
+      { text: "250 ml Leche tibia", group: "Líquidos" },
+      { text: "Cubierta: Chocolate + Maicena", group: "Topping" }
     ],
     steps: [
-      "Comenzar agregando el azúcar en un bol con el agua y mezclar bien.",
-      "Agregar la levadura, luego incorporar 1 huevo y mezclar nuevamente.",
-      "Agregar la harina (aproximadamente 500gr inicialmente) e integrar.",
-      "Luego de mezclar, agregar la sal.",
-      "Amasar en el mesón durante 10 minutos integrando la margarina en 2 partes.",
-      "Agregar harina gradualmente hasta tener una masa suave y lisa (aprox. 1.2kg).",
-      "Dividir en 2 mitades iguales y dejar leudar por 1 hora.",
-      "Extender la masa entre 40-50 cm hasta que esté bien delgada.",
-      "Hacer una hilera de aceitunas en el borde y envolverlas.",
-      "Cubrir con queso crema, jamón, pasas y panceta en diagonal.",
-      "Enrollar con suavidad y sellar bordes con huevo.",
-      "Clavar un tenedor por todo el pan para el vapor.",
-      "Pintar con huevo y dejar leudar 1 hora adicional.",
-      "Barniz: Mezclar 1/4 taza de azúcar con agua caliente hasta color caramelo.",
-      "Hornear a 180°C por 25-30 min. Barnizar y hornear 10 min más."
+      "Licuar huevos hasta espumar. Añadir azúcar y batir hasta que suba.",
+      "Incorporar mantequilla y leche. Batir.",
+      "Tamizar harina, cacao y bicarbonato. Mezclar perfecto.",
+      "Hornear a 180°C por 40 min.",
+      "Hacer cobertura de maicena y cacao hasta espesar.",
+      "Bañar la torta desmoldada con el chocolate caliente."
     ],
-    tip: "Conservación: Guárdalo en la heladera envuelto en tela delgada de algodón. Recalienta a 170°C antes de servir."
+    tip: "No escatimes en el batido de los huevos, es la clave de la textura Matilda."
   },
   {
     id: 'casero',
@@ -81,125 +67,114 @@ const INITIAL_RECIPES: Recipe[] = [
     prep: "2.5h",
     servings: "6U",
     difficulty: "Fácil",
+    color: "#a855f7", // Violeta Eléctrico
     image: "https://images.unsplash.com/photo-1597079910443-60c43fc4f729?auto=format&fit=crop&q=80&w=800",
     ingredients: [
       { text: "500 gr Harina", group: "Secos" },
       { text: "300 ml Agua tibia", group: "Líquidos" },
-      { text: "15 gr Sal", group: "Secos" },
-      { text: "10 gr Levadura", group: "Líquidos" },
-      { text: "1/2 cucharada de Azúcar", group: "Líquidos" },
+      { text: "15 gr Sal / 10 gr Levadura", group: "Base" },
       { text: "30-40 gr Manteca", group: "Grasas" }
     ],
     steps: [
-      "Mezclar agua tibia con levadura y azúcar.",
-      "Mezclar harina con sal en un bol grande e integrar líquidos.",
-      "Añadir manteca y amasar por 10 minutos.",
-      "Reposar masa tapada por 30 minutos.",
-      "Dividir en 6 partes iguales.",
-      "Estirar y enrollar presionando con la palma como un 'burrito'.",
-      "Colocar en bandeja aceitada y hacer cortes diagonales.",
-      "Tapar y dejar reposar 1 hora hasta duplicar tamaño.",
-      "Hornear a 180°C-200°C por 10 a 15 minutos."
+      "Activar levadura con azúcar en agua tibia.",
+      "Unir secos con líquidos e integrar la manteca.",
+      "Amasar 10 min. Reposo de 30 min.",
+      "Dividir en 6. Formar burritos presionando con la palma.",
+      "Colocar en bandeja y hacer cortes diagonales.",
+      "Leudar 1 hora y hornear a 190°C por 15 min."
     ],
-    tip: "Usa la 'prueba de la huella'. Si presionas y la masa vuelve lento, está lista para el horno."
+    tip: "Si al presionar la huella vuelve lento, el pan pide horno inmediatamente."
   },
   {
-    id: 'matilda',
-    title: "Torta Matilda",
-    category: "POSTRES",
-    prep: "1h",
-    servings: "10P",
-    difficulty: "Fácil",
-    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=800",
+    id: 'jamon',
+    title: "Pan de Jamón",
+    category: "FESTIVOS",
+    prep: "4h",
+    servings: "2P",
+    difficulty: "Experto",
+    color: "#22d3ee", // Cian Neón
+    image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800",
     ingredients: [
-      { text: "3 Huevos", group: "Masa" },
-      { text: "100 gr Mantequilla derretida", group: "Masa" },
-      { text: "200-400 gr Azúcar", group: "Masa" },
-      { text: "2-3 cdas de Vainilla / 250ml Leche", group: "Masa" },
-      { text: "100 gr Chocolate en polvo", group: "Masa" },
-      { text: "280 gr Harina de trigo", group: "Masa" },
-      { text: "1 cda Polvo hornear / 1 cdita Bicarbonato", group: "Masa" },
-      { text: "1 vaso Agua / 4 cdas Maicena", group: "Cubierta" },
-      { text: "5 cdas Cacao / 3 cdas Mantequilla", group: "Cubierta" },
-      { text: "200 gr Azúcar", group: "Cubierta" }
+      { text: "500-800 gr Harina 000", group: "Masa" },
+      { text: "260 ml Agua / 60 gr Azúcar", group: "Masa" },
+      { text: "100 gr Margarina / 2 Huevos", group: "Masa" },
+      { text: "10 gr Levadura / 10 gr Sal", group: "Masa" },
+      { text: "1 Kg Jamón / 250 gr Panceta", group: "Relleno" },
+      { text: "150 gr Aceitunas / 150 gr Pasas", group: "Relleno" }
     ],
     steps: [
-      "Licuar huevos hasta que generen mucha espuma.",
-      "Agregar azúcar y batir hasta que duplique tamaño.",
-      "Incorporar mantequilla, vainilla y leche tibia; batir.",
-      "Tamizar cacao, harina, sal y bicarbonato sobre la mezcla.",
-      "Mezclar con cuidado hasta integrar perfectamente.",
-      "Agregar polvo de hornear y batir suavemente.",
-      "Verter en molde engrasado y enharinado.",
-      "Hornear a 180°C por 30-40 minutos.",
-      "Cubierta: Mezclar agua y maicena en olla apagada.",
-      "Añadir cacao, mantequilla y azúcar.",
-      "Cocinar mezclando hasta que espese al punto deseado.",
-      "Bañar la torta desmoldada con la mezcla caliente."
+      "Mezclar azúcar con agua y activar levadura.",
+      "Integrar harina, huevo y sal. Amasar 10 min añadiendo margarina.",
+      "Leudar 1 hora. Extender masa muy delgada (40-50cm).",
+      "Colocar hilera de aceitunas en el borde y envolver.",
+      "Cubrir con jamón, pasas y panceta diagonal.",
+      "Enrollar, pinchar con tenedor y pintar con huevo.",
+      "Hornear a 180°C por 30 min. Barnizar con caramelo y 10 min finales."
     ],
-    tip: "El éxito es el batido inicial de los huevos; cuanto más aire tengan, más esponjosa será."
+    tip: "Usa un paño de algodón fino para guardarlo en la heladera. El contraste de sabor mejora al día siguiente."
   }
 ];
 
 const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
-  const filteredRecipes = useMemo(() => {
-    return INITIAL_RECIPES;
-  }, []);
-
   const Dashboard = () => (
-    <div className="flex flex-col h-screen bg-[#050505] overflow-hidden">
-      {/* Header Minimalista */}
-      <header className="px-6 pt-16 pb-4 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-zinc-900">
+    <div className="flex flex-col h-screen bg-[#05070A] overflow-hidden">
+      {/* Header - Digital High Contrast */}
+      <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-[#0A0E1A] border-b-4 border-indigo-500/30">
         <div className="flex items-center gap-3">
-          <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
-          <h1 className="text-[10px] font-black tracking-[0.4em] text-zinc-400 uppercase">Chef ED</h1>
+          <div className="w-3 h-3 bg-cyan-400 shadow-[0_0_15px_#22d3ee] rounded-sm" />
+          <h1 className="text-[12px] font-black tracking-[0.6em] text-white uppercase italic">CHEF ED // V.6</h1>
         </div>
-        <div className="flex gap-5">
-          <Search size={18} className="text-zinc-600 hover:text-white transition-colors cursor-pointer" />
-          <Filter size={18} className="text-zinc-600 hover:text-white transition-colors cursor-pointer" />
+        <div className="flex gap-6">
+          <Search size={22} className="text-indigo-400" />
+          <Filter size={22} className="text-indigo-400" />
         </div>
       </header>
 
-      {/* Hero Bienvenida - Reducido */}
-      <div className="px-6 pt-8 pb-4">
-        <p className="text-zinc-500 text-[9px] font-bold tracking-widest uppercase mb-1">Recetario Digital</p>
-        <h2 className="text-3xl font-black text-white tracking-tighter">
-          Hola, Ernesto.
+      {/* Hero Bienvenida */}
+      <div className="px-8 pt-12 pb-4">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles size={14} className="text-cyan-400" />
+          <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest underline decoration-cyan-400 decoration-2 underline-offset-4">Project: Kitchen</span>
+        </div>
+        <h2 className="text-5xl font-black text-white tracking-tighter leading-[0.8]">
+          EY, <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">ERNESTO</span>.
         </h2>
       </div>
 
-      {/* Lista de Recetas - Prioridad a los títulos */}
-      <div className="flex-1 overflow-y-auto px-6 space-y-3 pb-12">
+      {/* Lista de Recetas - BOLD DESIGN */}
+      <div className="flex-1 overflow-y-auto px-6 space-y-6 mt-8 pb-24">
         {filteredRecipes.map((recipe) => (
           <div 
             key={recipe.id}
             onClick={() => setSelectedRecipe(recipe)}
-            className="flex items-center justify-between p-5 bg-zinc-900/30 rounded-[2rem] border border-zinc-900 hover:border-zinc-800 active:scale-[0.98] transition-all duration-200 group"
+            className="flex items-center justify-between p-6 bg-[#0A0E1A] rounded-[2rem] border-4 border-indigo-500/10 hover:border-cyan-400/50 active:scale-[0.96] transition-all duration-300 group relative overflow-hidden"
           >
-            {/* Título más grande y con más peso visual */}
-            <div className="flex-1 pr-6">
-              <span className="text-[8px] font-black tracking-[0.15em] text-orange-500/60 mb-1 block">
+            {/* Background Accent Glow */}
+            <div className="absolute -right-10 -bottom-10 w-32 h-32 blur-[60px] opacity-20 transition-all group-hover:opacity-40" style={{ backgroundColor: recipe.color }} />
+
+            <div className="flex-1 pr-4 relative z-10">
+              <span className="text-[9px] font-black tracking-[0.25em] mb-2 block" style={{ color: recipe.color }}>
                 {recipe.category}
               </span>
-              <h3 className="text-3xl font-black text-white leading-[0.9] tracking-tighter group-hover:text-orange-500 transition-colors">
+              <h3 className="text-4xl font-black text-white leading-[0.8] tracking-tighter group-hover:translate-x-1 transition-transform">
                 {recipe.title}
               </h3>
-              <div className="flex items-center gap-4 mt-3 text-zinc-500 text-[10px] font-bold">
-                <span className="flex items-center gap-1"><Clock size={12} /> {recipe.prep}</span>
-                <span className="flex items-center gap-1"><Users size={12} /> {recipe.servings}</span>
+              <div className="flex items-center gap-4 mt-5 text-zinc-500 text-[11px] font-black">
+                <span className="flex items-center gap-1.5"><Clock size={14} /> {recipe.prep}</span>
+                <span className="flex items-center gap-1.5"><Users size={14} /> {recipe.servings}</span>
               </div>
             </div>
 
-            {/* Imagen Cuadrada Secundaria (80px x 80px) */}
-            <div className="relative w-20 h-20 shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/5 bg-zinc-800">
+            {/* Imagen Digital 3x3 cm (80px) */}
+            <div className="relative w-20 h-20 shrink-0 bg-[#05070A] rounded-2xl border-2 border-zinc-800 group-hover:border-cyan-400 transition-colors shadow-2xl overflow-hidden">
               <img 
                 src={recipe.image} 
                 alt={recipe.title} 
-                className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700 opacity-80 group-hover:opacity-100"
+                className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
+              <div className="absolute inset-0 border-2 border-white/10 rounded-2xl pointer-events-none" />
             </div>
           </div>
         ))}
@@ -211,21 +186,23 @@ const App: React.FC = () => {
     const [checked, setChecked] = useState<Record<string, boolean>>({});
 
     return (
-      <div className="h-screen bg-black overflow-hidden flex flex-col animate-in fade-in slide-in-from-right duration-400">
-        {/* Cabecera Detalle */}
-        <div className="relative h-[32vh] shrink-0">
-          <img src={recipe.image} className="w-full h-full object-cover" alt="" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-black/60" />
+      <div className="h-screen bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
+        {/* Cabecera Detalle Digital Art */}
+        <div className="relative h-[35vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
+          <div className="absolute inset-0 flex items-center justify-center opacity-40">
+             <img src={recipe.image} className="w-full h-full object-cover scale-110 blur-sm" alt="" />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent" />
           
           <button 
             onClick={() => setSelectedRecipe(null)}
-            className="absolute top-14 left-6 p-3 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full text-white active:scale-90 transition-transform"
+            className="absolute top-14 left-6 w-12 h-12 rounded-full bg-white/5 backdrop-blur-3xl border-2 border-white/10 flex items-center justify-center text-white active:scale-90 transition-transform"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={24} />
           </button>
 
-          <div className="absolute bottom-6 left-8 right-8">
-            <h2 className="text-5xl font-black text-white leading-none tracking-tighter">
+          <div className="absolute bottom-8 left-8 right-8">
+            <h2 className="text-6xl font-black text-white leading-[0.75] tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]">
               {recipe.title}
             </h2>
           </div>
@@ -233,66 +210,75 @@ const App: React.FC = () => {
 
         {/* Contenido */}
         <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-32">
-          {/* Stats */}
-          <div className="flex justify-between items-center border-b border-zinc-900 pb-8">
-            <div className="flex flex-col items-center gap-1">
-              <Clock size={16} className="text-zinc-600" />
-              <p className="text-white font-bold text-sm">{recipe.prep}</p>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <Users size={16} className="text-zinc-600" />
-              <p className="text-white font-bold text-sm">{recipe.servings}</p>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <Flame size={16} className="text-zinc-600" />
-              <p className="text-white font-bold text-sm">{recipe.difficulty}</p>
-            </div>
+          {/* Stats Cards */}
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { icon: <Clock />, val: recipe.prep, label: 'TIME' },
+              { icon: <Users />, val: recipe.servings, label: 'SIZE' },
+              { icon: <Flame />, val: recipe.difficulty, label: 'LVL' }
+            ].map((s, i) => (
+              <div key={i} className="bg-[#0A0E1A] border-2 border-indigo-500/10 p-4 rounded-2xl text-center">
+                <div className="flex justify-center mb-1" style={{ color: recipe.color }}>{s.icon}</div>
+                <p className="text-white font-black text-sm leading-none">{s.val}</p>
+                <p className="text-[8px] font-bold text-zinc-600 mt-1 uppercase tracking-widest">{s.label}</p>
+              </div>
+            ))}
           </div>
 
-          {/* Ingredientes */}
+          {/* Ingredientes - Checkboxes BOLD */}
           <section>
-            <div className="flex items-center gap-2 mb-6">
-              <BookOpen className="text-orange-500" size={18} />
-              <h3 className="text-[10px] font-black tracking-widest uppercase text-zinc-500">Ingredientes</h3>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
+                <BookOpen size={20} />
+              </div>
+              <h3 className="text-lg font-black tracking-tighter uppercase text-white">REQUERIMIENTOS</h3>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {recipe.ingredients.map((ing, i) => (
                 <div 
                   key={i} 
                   onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))}
-                  className={`flex items-center justify-between p-4 rounded-[1.5rem] transition-all border ${
-                    checked[`i-${i}`] ? 'bg-zinc-900 border-transparent opacity-30' : 'bg-zinc-900/30 border-zinc-900'
+                  className={`flex items-center justify-between p-5 rounded-2xl transition-all border-2 ${
+                    checked[`i-${i}`] 
+                      ? 'bg-zinc-900 border-transparent opacity-20' 
+                      : 'bg-[#0A0E1A] border-indigo-500/5 hover:border-cyan-400/40'
                   }`}
                 >
-                  <span className={`text-sm ${checked[`i-${i}`] ? 'line-through' : 'text-zinc-200'}`}>{ing.text}</span>
-                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${checked[`i-${i}`] ? 'bg-orange-500 border-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.4)]' : 'border-zinc-800'}`}>
-                    {checked[`i-${i}`] && <CheckCircle2 size={12} className="text-black" />}
+                  <span className={`text-base font-bold ${checked[`i-${i}`] ? 'line-through text-zinc-500' : 'text-zinc-200'}`}>
+                    {ing.text}
+                  </span>
+                  <div className={`w-7 h-7 rounded-xl border-3 flex items-center justify-center transition-all ${
+                    checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'border-zinc-800'
+                  }`}>
+                    {checked[`i-${i}`] && <CheckCircle2 size={16} className="text-black stroke-[3px]" />}
                   </div>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* Preparación */}
+          {/* Preparación - Trazo Grueso */}
           <section>
-            <div className="flex items-center gap-2 mb-8">
-              <Flame className="text-orange-500" size={18} />
-              <h3 className="text-[10px] font-black tracking-widest uppercase text-zinc-500">Preparación</h3>
+            <div className="flex items-center gap-3 mb-10">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
+                <Flame size={20} />
+              </div>
+              <h3 className="text-lg font-black tracking-tighter uppercase text-white">EJECUCIÓN</h3>
             </div>
-            <div className="space-y-10 relative pl-4">
-              <div className="absolute left-4 top-2 bottom-2 w-px bg-zinc-900" />
+            <div className="space-y-12 relative pl-6">
+              <div className="absolute left-6 top-6 bottom-6 w-[4px] bg-zinc-900 rounded-full" />
               {recipe.steps.map((step, i) => (
                 <div 
                   key={i} 
                   onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))}
-                  className={`relative transition-opacity ${checked[`s-${i}`] ? 'opacity-20' : ''}`}
+                  className={`relative transition-all duration-300 ${checked[`s-${i}`] ? 'opacity-20' : ''}`}
                 >
-                  <div className={`absolute -left-[1.35rem] top-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border bg-black ${
-                    checked[`s-${i}`] ? 'border-orange-500 text-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.3)]' : 'border-zinc-800 text-zinc-600'
+                  <div className={`absolute -left-[2.35rem] top-0 w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black border-4 bg-[#05070A] z-10 transition-all ${
+                    checked[`s-${i}`] ? 'border-cyan-400 text-cyan-400' : 'border-zinc-800 text-zinc-600'
                   }`}>
                     {i + 1}
                   </div>
-                  <p className="text-base leading-relaxed text-zinc-300 pl-6">
+                  <p className="text-lg leading-relaxed text-zinc-300 pl-10 font-bold">
                     {step}
                   </p>
                 </div>
@@ -300,33 +286,36 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          {/* Tips */}
-          <div className="bg-zinc-900/40 p-6 rounded-3xl border border-white/5 mb-20">
-            <div className="flex items-center gap-2 mb-3">
-              <Info size={14} className="text-orange-500" />
-              <span className="text-[9px] font-black uppercase tracking-widest text-orange-500">Chef ED Note</span>
-            </div>
-            <p className="text-zinc-400 text-xs italic leading-relaxed">
+          {/* Tip Area */}
+          <div className="bg-[#0A0E1A] p-8 rounded-[2.5rem] border-4 border-indigo-500/10 mb-20 relative overflow-hidden">
+             <div className="absolute top-0 right-0 p-4 opacity-10">
+                <Info size={40} />
+             </div>
+             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400 mb-2 block">LOG // SYSTEM TIP</span>
+             <p className="text-zinc-400 text-base italic leading-relaxed font-bold">
               "{recipe.tip}"
             </p>
           </div>
         </div>
 
         {/* Footer Cierre */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
+        <div className="fixed bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-[#05070A] via-[#05070A]/90 to-transparent">
           <button 
             onClick={() => setSelectedRecipe(null)}
-            className="w-full bg-zinc-900 text-white font-black py-4 rounded-2xl border border-zinc-800 uppercase tracking-widest text-[11px] active:scale-95 transition-transform"
+            className="w-full bg-indigo-600 text-white font-black py-5 rounded-3xl border-b-8 border-indigo-800 uppercase tracking-widest text-[11px] active:scale-95 active:border-b-0 transition-all shadow-[0_10px_30px_rgba(79,70,229,0.3)]"
           >
-             Regresar al Panel
+             TERMINAR PROCESO
           </button>
         </div>
       </div>
     );
   };
 
+  // Memoización para el dashboard (evita re-renders innecesarios)
+  const filteredRecipes = useMemo(() => INITIAL_RECIPES, []);
+
   return (
-    <div className="font-sans antialiased text-white selection:bg-orange-500/30 selection:text-orange-500">
+    <div className="font-sans antialiased text-white selection:bg-cyan-500 selection:text-black bg-[#05070A]">
       {selectedRecipe ? (
         <CookingView recipe={selectedRecipe} />
       ) : (
