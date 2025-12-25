@@ -32,7 +32,7 @@ interface Recipe {
   color: string;
 }
 
-// --- DATA CURADA ---
+// --- DATA CURADA (Orden: Matilda, Casero, Jamón) ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -117,6 +117,7 @@ const INITIAL_RECIPES: Recipe[] = [
 
 const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   // EFECTO DE RESET GLOBAL (Para que se vea igual que en el Canvas)
   useEffect(() => {
@@ -129,16 +130,17 @@ const App: React.FC = () => {
         background-color: #05070A !important; 
         overflow-x: hidden;
       }
-      /* Eliminar el centrado por defecto de los templates de Vite */
       #root { display: block !important; }
     `;
     document.head.appendChild(style);
     return () => { document.head.removeChild(style); };
   }, []);
 
+  const filteredRecipes = useMemo(() => INITIAL_RECIPES, []);
+
+  // COMPONENTE DASHBOARD
   const Dashboard = () => (
     <div className="flex flex-col min-h-screen bg-[#05070A] overflow-x-hidden">
-      {/* Header - Digital High Contrast */}
       <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-[#0A0E1A] border-b-4 border-indigo-500/30">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 bg-cyan-400 shadow-[0_0_15px_#22d3ee] rounded-sm" />
@@ -150,8 +152,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Bienvenida */}
-      <div className="px-8 pt-12 pb-4">
+      <div className="px-8 pt-12 pb-4 text-left">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles size={14} className="text-cyan-400" />
           <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest underline decoration-cyan-400 decoration-2 underline-offset-4">Project: Kitchen</span>
@@ -161,22 +162,24 @@ const App: React.FC = () => {
         </h2>
       </div>
 
-      {/* Lista de Recetas - BOLD DESIGN */}
       <div className="flex-1 overflow-y-auto px-6 space-y-6 mt-8 pb-24">
-        {INITIAL_RECIPES.map((recipe) => (
+        {filteredRecipes.map((recipe) => (
           <div 
             key={recipe.id}
-            onClick={() => setSelectedRecipe(recipe)}
+            onClick={() => {
+              setSelectedRecipe(recipe);
+              setChecked({});
+              window.scrollTo(0,0);
+            }}
             className="flex items-center justify-between p-6 bg-[#0A0E1A] rounded-[2rem] border-4 border-indigo-500/10 hover:border-cyan-400/50 active:scale-[0.96] transition-all duration-300 group relative overflow-hidden"
           >
-            {/* Background Accent Glow */}
             <div className="absolute -right-10 -bottom-10 w-32 h-32 blur-[60px] opacity-20 transition-all group-hover:opacity-40" style={{ backgroundColor: recipe.color }} />
 
-            <div className="flex-1 pr-4 relative z-10">
+            <div className="flex-1 pr-4 relative z-10 text-left">
               <span className="text-[9px] font-black tracking-[0.25em] mb-2 block" style={{ color: recipe.color }}>
                 {recipe.category}
               </span>
-              <h3 className="text-4xl font-black text-white leading-[0.8] tracking-tighter group-hover:translate-x-1 transition-transform">
+              <h3 className="text-4xl font-black text-white leading-[0.8] tracking-tighter group-hover:translate-x-1 transition-transform uppercase">
                 {recipe.title}
               </h3>
               <div className="flex items-center gap-4 mt-5 text-zinc-500 text-[11px] font-black">
@@ -185,13 +188,8 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Imagen Digital 3x3 cm (80px) */}
             <div className="relative w-20 h-20 shrink-0 bg-[#05070A] rounded-2xl border-2 border-zinc-800 group-hover:border-cyan-400 transition-colors shadow-2xl overflow-hidden">
-              <img 
-                src={recipe.image} 
-                alt={recipe.title} 
-                className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-500"
-              />
+              <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-500" />
               <div className="absolute inset-0 border-2 border-white/10 rounded-2xl pointer-events-none" />
             </div>
           </div>
@@ -200,144 +198,116 @@ const App: React.FC = () => {
     </div>
   );
 
-  const CookingView = ({ recipe }: { recipe: Recipe }) => {
-    const [checked, setChecked] = useState<Record<string, boolean>>({});
+  // COMPONENTE DETALLE
+  const CookingView = ({ recipe }: { recipe: Recipe }) => (
+    <div className="fixed inset-0 z-50 bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
+      <div className="relative h-[35vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
+        <div className="absolute inset-0 flex items-center justify-center opacity-40">
+           <img src={recipe.image} className="w-full h-full object-cover scale-110 blur-sm" alt="" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent" />
+        
+        <button 
+          onClick={() => setSelectedRecipe(null)}
+          className="absolute top-14 left-6 w-12 h-12 rounded-full bg-white/5 backdrop-blur-3xl border-2 border-white/10 flex items-center justify-center text-white active:scale-90 transition-transform"
+        >
+          <ArrowLeft size={24} />
+        </button>
 
-    return (
-      <div className="fixed inset-0 z-50 bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
-        {/* Cabecera Detalle Digital Art */}
-        <div className="relative h-[35vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
-          <div className="absolute inset-0 flex items-center justify-center opacity-40">
-             <img src={recipe.image} className="w-full h-full object-cover scale-110 blur-sm" alt="" />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent" />
-          
-          <button 
-            onClick={() => setSelectedRecipe(null)}
-            className="absolute top-14 left-6 w-12 h-12 rounded-full bg-white/5 backdrop-blur-3xl border-2 border-white/10 flex items-center justify-center text-white active:scale-90 transition-transform"
-          >
-            <ArrowLeft size={24} />
-          </button>
+        <div className="absolute bottom-8 left-8 right-8 text-left">
+          <h2 className="text-6xl font-black text-white leading-[0.75] tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] uppercase">
+            {recipe.title}
+          </h2>
+        </div>
+      </div>
 
-          <div className="absolute bottom-8 left-8 right-8 text-left">
-            <h2 className="text-6xl font-black text-white leading-[0.75] tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]">
-              {recipe.title}
-            </h2>
-          </div>
+      <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-32">
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { icon: <Clock />, val: recipe.prep, label: 'TIME' },
+            { icon: <Users />, val: recipe.servings, label: 'SIZE' },
+            { icon: <Flame />, val: recipe.difficulty, label: 'LVL' }
+          ].map((s, i) => (
+            <div key={i} className="bg-[#0A0E1A] border-2 border-indigo-500/10 p-4 rounded-2xl text-center">
+              <div className="flex justify-center mb-1" style={{ color: recipe.color }}>{s.icon}</div>
+              <p className="text-white font-black text-sm leading-none">{s.val}</p>
+              <p className="text-[8px] font-bold text-zinc-600 mt-1 uppercase tracking-widest">{s.label}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Contenido */}
-        <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-32">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { icon: <Clock />, val: recipe.prep, label: 'TIME' },
-              { icon: <Users />, val: recipe.servings, label: 'SIZE' },
-              { icon: <Flame />, val: recipe.difficulty, label: 'LVL' }
-            ].map((s, i) => (
-              <div key={i} className="bg-[#0A0E1A] border-2 border-indigo-500/10 p-4 rounded-2xl text-center">
-                <div className="flex justify-center mb-1" style={{ color: recipe.color }}>{s.icon}</div>
-                <p className="text-white font-black text-sm leading-none">{s.val}</p>
-                <p className="text-[8px] font-bold text-zinc-600 mt-1 uppercase tracking-widest">{s.label}</p>
+        <section className="text-left">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
+              <BookOpen size={20} />
+            </div>
+            <h3 className="text-lg font-black tracking-tighter uppercase text-white">REQUERIMIENTOS</h3>
+          </div>
+          <div className="space-y-3">
+            {recipe.ingredients.map((ing, i) => (
+              <div 
+                key={i} 
+                onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))}
+                className={`flex items-center justify-between p-5 rounded-2xl transition-all border-2 ${
+                  checked[`i-${i}`] ? 'bg-zinc-900 border-transparent opacity-20' : 'bg-[#0A0E1A] border-indigo-500/5 hover:border-cyan-400/40'
+                }`}
+              >
+                <span className={`text-base font-bold ${checked[`i-${i}`] ? 'line-through text-zinc-500' : 'text-zinc-200'}`}>
+                  {ing.text}
+                </span>
+                <div className={`w-7 h-7 rounded-xl border-3 flex items-center justify-center transition-all ${
+                  checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'border-zinc-800'
+                }`}>
+                  {checked[`i-${i}`] && <CheckCircle2 size={16} className="text-black stroke-[3px]" />}
+                </div>
               </div>
             ))}
           </div>
+        </section>
 
-          {/* Ingredientes */}
-          <section className="text-left">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
-                <BookOpen size={20} />
-              </div>
-              <h3 className="text-lg font-black tracking-tighter uppercase text-white">REQUERIMIENTOS</h3>
+        <section className="text-left">
+          <div className="flex items-center gap-3 mb-10">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
+              <Flame size={20} />
             </div>
-            <div className="space-y-3">
-              {recipe.ingredients.map((ing, i) => (
-                <div 
-                  key={i} 
-                  onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))}
-                  className={`flex items-center justify-between p-5 rounded-2xl transition-all border-2 ${
-                    checked[`i-${i}`] 
-                      ? 'bg-zinc-900 border-transparent opacity-20' 
-                      : 'bg-[#0A0E1A] border-indigo-500/5 hover:border-cyan-400/40'
-                  }`}
-                >
-                  <span className={`text-base font-bold ${checked[`i-${i}`] ? 'line-through text-zinc-500' : 'text-zinc-200'}`}>
-                    {ing.text}
-                  </span>
-                  <div className={`w-7 h-7 rounded-xl border-3 flex items-center justify-center transition-all ${
-                    checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400' : 'border-zinc-800'
-                  }`}>
-                    {checked[`i-${i}`] && <CheckCircle2 size={16} className="text-black stroke-[3px]" />}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Preparación */}
-          <section className="text-left">
-            <div className="flex items-center gap-3 mb-10">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
-                <Flame size={20} />
-              </div>
-              <h3 className="text-lg font-black tracking-tighter uppercase text-white">EJECUCIÓN</h3>
-            </div>
-            <div className="space-y-12 relative pl-6">
-              <div className="absolute left-6 top-6 bottom-6 w-[4px] bg-zinc-900 rounded-full" />
-              {recipe.steps.map((step, i) => (
-                <div 
-                  key={i} 
-                  onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))}
-                  className={`relative transition-all duration-300 ${checked[`s-${i}`] ? 'opacity-20' : ''}`}
-                >
-                  <div className={`absolute -left-[2.35rem] top-0 w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black border-4 bg-[#05070A] z-10 transition-all ${
-                    checked[`s-${i}`] ? 'border-cyan-400 text-cyan-400' : 'border-zinc-800 text-zinc-600'
-                  }`}>
-                    {i + 1}
-                  </div>
-                  <p className="text-lg leading-relaxed text-zinc-300 pl-10 font-bold">
-                    {step}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Tip Area */}
-          <div className="bg-[#0A0E1A] p-8 rounded-[2.5rem] border-4 border-indigo-500/10 mb-20 relative overflow-hidden text-left">
-             <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Info size={40} />
-             </div>
-             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400 mb-2 block">LOG // SYSTEM TIP</span>
-             <p className="text-zinc-400 text-base italic leading-relaxed font-bold">
-              "{recipe.tip}"
-            </p>
+            <h3 className="text-lg font-black tracking-tighter uppercase text-white">EJECUCIÓN</h3>
           </div>
-        </div>
+          <div className="space-y-12 relative pl-6">
+            <div className="absolute left-6 top-6 bottom-6 w-[4px] bg-zinc-900 rounded-full" />
+            {recipe.steps.map((step, i) => (
+              <div key={i} onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))} className={`relative transition-all duration-300 ${checked[`s-${i}`] ? 'opacity-20' : ''}`}>
+                <div className={`absolute -left-[2.35rem] top-0 w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black border-4 bg-[#05070A] z-10 ${
+                  checked[`s-${i}`] ? 'border-cyan-400 text-cyan-400' : 'border-zinc-800 text-zinc-600'
+                }`}>
+                  {i + 1}
+                </div>
+                <p className="text-lg leading-relaxed text-zinc-300 pl-10 font-bold">{step}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        {/* Footer Cierre */}
-        <div className="fixed bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-[#05070A] via-[#05070A]/90 to-transparent">
-          <button 
-            onClick={() => setSelectedRecipe(null)}
-            className="w-full bg-indigo-600 text-white font-black py-5 rounded-3xl border-b-8 border-indigo-800 uppercase tracking-widest text-[11px] active:scale-95 active:border-b-0 transition-all shadow-[0_10px_30px_rgba(79,70,229,0.3)]"
-          >
-             TERMINAR PROCESO
-          </button>
+        <div className="bg-[#0A0E1A] p-8 rounded-[2.5rem] border-4 border-indigo-500/10 mb-20 relative overflow-hidden text-left">
+           <div className="absolute top-0 right-0 p-4 opacity-10"><Info size={40} /></div>
+           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400 mb-2 block">LOG // SYSTEM TIP</span>
+           <p className="text-zinc-400 text-base italic leading-relaxed font-bold">"{recipe.tip}"</p>
         </div>
       </div>
-    );
-  };
 
-  const filteredRecipes = useMemo(() => INITIAL_RECIPES, []);
+      <div className="fixed bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-[#05070A] via-[#05070A]/90 to-transparent">
+        <button 
+          onClick={() => setSelectedRecipe(null)}
+          className="w-full bg-indigo-600 text-white font-black py-5 rounded-3xl border-b-8 border-indigo-800 uppercase tracking-widest text-[11px] active:scale-95 active:border-b-0 transition-all shadow-[0_10px_30px_rgba(79,70,229,0.3)]"
+        >
+           TERMINAR PROCESO
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="font-sans antialiased text-white selection:bg-cyan-500 selection:text-black bg-[#05070A]">
-      {selectedRecipe ? (
-        <CookingView recipe={selectedRecipe} />
-      ) : (
-        <Dashboard />
-      )}
+      {selectedRecipe ? <CookingView recipe={selectedRecipe} /> : <Dashboard />}
     </div>
   );
 };
