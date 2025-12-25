@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   Clock, 
@@ -25,14 +25,14 @@ interface Recipe {
   prep: string;
   servings: string;
   difficulty: string;
-  image: string; // Sustituimos ilustración por URL de imagen digital
+  image: string;
   ingredients: Ingredient[];
   steps: string[];
   tip: string;
-  color: string; // Color temático para contrastes neón
+  color: string;
 }
 
-// --- DATA CURADA CON TUS NUEVAS ILUSTRACIONES ---
+// --- DATA CURADA ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -41,7 +41,7 @@ const INITIAL_RECIPES: Recipe[] = [
     prep: "1h",
     servings: "10P",
     difficulty: "Fácil",
-    color: "#ec4899", // Magenta Neón
+    color: "#ec4899",
     image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=800",
     ingredients: [
       { text: "3 Huevos / 200gr Azúcar", group: "Base" },
@@ -67,7 +67,7 @@ const INITIAL_RECIPES: Recipe[] = [
     prep: "2.5h",
     servings: "6U",
     difficulty: "Fácil",
-    color: "#a855f7", // Violeta Eléctrico
+    color: "#a855f7",
     image: "https://images.unsplash.com/photo-1597079910443-60c43fc4f729?auto=format&fit=crop&q=80&w=800",
     ingredients: [
       { text: "500 gr Harina", group: "Secos" },
@@ -92,7 +92,7 @@ const INITIAL_RECIPES: Recipe[] = [
     prep: "4h",
     servings: "2P",
     difficulty: "Experto",
-    color: "#22d3ee", // Cian Neón
+    color: "#22d3ee",
     image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800",
     ingredients: [
       { text: "500-800 gr Harina 000", group: "Masa" },
@@ -118,8 +118,26 @@ const INITIAL_RECIPES: Recipe[] = [
 const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
+  // EFECTO DE RESET GLOBAL (Para que se vea igual que en el Canvas)
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body, html, #root { 
+        width: 100%; 
+        height: 100%; 
+        background-color: #05070A !important; 
+        overflow-x: hidden;
+      }
+      /* Eliminar el centrado por defecto de los templates de Vite */
+      #root { display: block !important; }
+    `;
+    document.head.appendChild(style);
+    return () => { document.head.removeChild(style); };
+  }, []);
+
   const Dashboard = () => (
-    <div className="flex flex-col h-screen bg-[#05070A] overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-[#05070A] overflow-x-hidden">
       {/* Header - Digital High Contrast */}
       <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-[#0A0E1A] border-b-4 border-indigo-500/30">
         <div className="flex items-center gap-3">
@@ -145,7 +163,7 @@ const App: React.FC = () => {
 
       {/* Lista de Recetas - BOLD DESIGN */}
       <div className="flex-1 overflow-y-auto px-6 space-y-6 mt-8 pb-24">
-        {filteredRecipes.map((recipe) => (
+        {INITIAL_RECIPES.map((recipe) => (
           <div 
             key={recipe.id}
             onClick={() => setSelectedRecipe(recipe)}
@@ -186,7 +204,7 @@ const App: React.FC = () => {
     const [checked, setChecked] = useState<Record<string, boolean>>({});
 
     return (
-      <div className="h-screen bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
+      <div className="fixed inset-0 z-50 bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
         {/* Cabecera Detalle Digital Art */}
         <div className="relative h-[35vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
           <div className="absolute inset-0 flex items-center justify-center opacity-40">
@@ -201,7 +219,7 @@ const App: React.FC = () => {
             <ArrowLeft size={24} />
           </button>
 
-          <div className="absolute bottom-8 left-8 right-8">
+          <div className="absolute bottom-8 left-8 right-8 text-left">
             <h2 className="text-6xl font-black text-white leading-[0.75] tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]">
               {recipe.title}
             </h2>
@@ -225,8 +243,8 @@ const App: React.FC = () => {
             ))}
           </div>
 
-          {/* Ingredientes - Checkboxes BOLD */}
-          <section>
+          {/* Ingredientes */}
+          <section className="text-left">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
                 <BookOpen size={20} />
@@ -248,7 +266,7 @@ const App: React.FC = () => {
                     {ing.text}
                   </span>
                   <div className={`w-7 h-7 rounded-xl border-3 flex items-center justify-center transition-all ${
-                    checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'border-zinc-800'
+                    checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400' : 'border-zinc-800'
                   }`}>
                     {checked[`i-${i}`] && <CheckCircle2 size={16} className="text-black stroke-[3px]" />}
                   </div>
@@ -257,8 +275,8 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          {/* Preparación - Trazo Grueso */}
-          <section>
+          {/* Preparación */}
+          <section className="text-left">
             <div className="flex items-center gap-3 mb-10">
               <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
                 <Flame size={20} />
@@ -287,7 +305,7 @@ const App: React.FC = () => {
           </section>
 
           {/* Tip Area */}
-          <div className="bg-[#0A0E1A] p-8 rounded-[2.5rem] border-4 border-indigo-500/10 mb-20 relative overflow-hidden">
+          <div className="bg-[#0A0E1A] p-8 rounded-[2.5rem] border-4 border-indigo-500/10 mb-20 relative overflow-hidden text-left">
              <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Info size={40} />
              </div>
@@ -311,7 +329,6 @@ const App: React.FC = () => {
     );
   };
 
-  // Memoización para el dashboard (evita re-renders innecesarios)
   const filteredRecipes = useMemo(() => INITIAL_RECIPES, []);
 
   return (
