@@ -206,12 +206,12 @@ const App: React.FC = () => {
       <div style={{ padding: '48px 32px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
           <Sparkles size={14} color="#22d3ee" />
-          <span style={{ fontSize: '10px', fontWeight: 900, color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Digital Workspace</span>
+          <span style={{ fontSize: '10px', fontWeight: 900, color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Recetario</span>
         </div>
-        <h2 style={{ fontSize: '64px', fontWeight: 900, color: 'white', letterSpacing: '-0.05em', lineHeight: '0.8', marginBottom: '8px' }}>
+        <h2 style={{ fontSize: '50px', fontWeight: 900, color: 'white', letterSpacing: '-0.05em', lineHeight: '0.8', marginBottom: '8px' }}>
           HOLA,<br/>
           <span style={{ background: 'linear-gradient(to right, #22d3ee, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textTransform: 'uppercase' }}>
-            ERNESTO</span>.
+            CHEF ERNESTO</span>.
         </h2>
       </div>
 
@@ -237,7 +237,7 @@ const App: React.FC = () => {
               <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.25em', marginBottom: '12px', display: 'block', color: recipe.color }}>
                 {recipe.category}
               </span>
-              <h3 style={{ fontSize: '48px', fontWeight: 900, color: 'white', lineHeight: '0.85', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
+              <h3 style={{ fontSize: '28px', fontWeight: 900, color: 'white', lineHeight: '0.85', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
                 {recipe.title}
               </h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '24px', color: '#444', fontSize: '11px', fontWeight: 900 }}>
