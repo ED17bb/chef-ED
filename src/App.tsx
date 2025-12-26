@@ -31,7 +31,7 @@ interface Recipe {
   color: string;
 }
 
-// --- DATA CURADA (Matilda, Casero, Jamón) ---
+// --- DATA CURADA ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -108,7 +108,7 @@ const INITIAL_RECIPES: Recipe[] = [
       "Colocar aceitunas en el borde y envolver.",
       "Cubrir con jamón, pasas y panceta diagonal. Enrollar.",
       "Pintar con huevo y pinchar con tenedor.",
-      "Hornear a 180°C por 30 min. Barnizar y 10 min más."
+      "Hornear a 180°C por 30 min. Barnizar con caramelo y 10 min más."
     ],
     tip: "Usa un paño de algodón fino para guardarlo en la heladera. ¡Sabe mejor al día siguiente!"
   }
@@ -120,6 +120,7 @@ const App: React.FC = () => {
 
   // --- ESCUDO DE ESTILOS GLOBALES (FUERZA BRUTA) ---
   useEffect(() => {
+    // Forzamos el Viewport para móviles
     const meta = document.createElement('meta');
     meta.name = "viewport";
     meta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0";
@@ -127,16 +128,31 @@ const App: React.FC = () => {
 
     const style = document.createElement('style');
     style.innerHTML = `
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+      
       * { margin: 0; padding: 0; box-sizing: border-box !important; -webkit-tap-highlight-color: transparent; }
+      
       body, html, #root { 
         width: 100% !important; 
         min-height: 100vh !important; 
         background-color: #05070A !important;
         color: white !important;
-        font-family: 'Inter', sans-serif, system-ui !important;
+        font-family: 'Inter', sans-serif !important;
         display: block !important;
         text-align: left !important;
       }
+
+      /* Clases de utilidad forzadas por si Tailwind falla */
+      .bg-main { background-color: #05070A !important; }
+      .bg-card { background-color: #0A0E1A !important; }
+      .text-cyan { color: #22d3ee !important; }
+      .text-indigo { color: #818cf8 !important; }
+      .text-neon-name {
+        background: linear-gradient(to right, #22d3ee, #6366f1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
       #root { max-width: none !important; margin: 0 !important; padding: 0 !important; }
       ::-webkit-scrollbar { display: none; }
     `;
@@ -148,26 +164,26 @@ const App: React.FC = () => {
   }, []);
 
   const Dashboard = () => (
-    <div className="flex flex-col min-h-screen bg-[#05070A] overflow-x-hidden text-left">
-      <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-[#0A0E1A] border-b-4 border-indigo-500/30">
+    <div className="flex flex-col min-h-screen bg-main overflow-x-hidden text-left">
+      <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-card border-b-4 border-indigo-500/30">
         <div className="flex items-center gap-3">
-          <div className="w-3 h-3 bg-cyan-400 shadow-[0_0_15px_#22d3ee] rounded-sm" />
-          <h1 className="text-[10px] font-black tracking-[0.5em] text-white/80 uppercase">CHEF ED</h1>
+          <div className="w-3 h-3 bg-cyan shadow-[0_0_15px_#22d3ee] rounded-sm" />
+          <h1 className="text-[10px] font-black tracking-[0.5em] text-white/50 uppercase">CHEF ED</h1>
         </div>
         <div className="flex gap-6">
-          <Search size={22} className="text-indigo-400" />
-          <Filter size={22} className="text-indigo-400" />
+          <Search size={22} className="text-indigo" />
+          <Filter size={22} className="text-indigo" />
         </div>
       </header>
 
       <div className="px-8 pt-12 pb-4">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles size={14} className="text-cyan-400" />
-          <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest underline decoration-cyan-400 decoration-2 underline-offset-4 italic">Digital Workspace</span>
+          <Sparkles size={14} className="text-cyan" />
+          <span className="text-[10px] font-black text-indigo uppercase tracking-widest underline decoration-cyan-400 decoration-2 underline-offset-4 italic">Digital Workspace</span>
         </div>
         <h2 className="text-6xl font-black text-white tracking-tighter leading-[0.8] mb-2">
           HOLA,<br/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-500 to-indigo-700 uppercase">ERNESTO</span>.
+          <span className="text-neon-name uppercase">ERNESTO</span>.
         </h2>
       </div>
 
@@ -180,15 +196,15 @@ const App: React.FC = () => {
               setChecked({});
               window.scrollTo(0,0);
             }}
-            className="flex items-center justify-between p-6 bg-[#0A0E1A] rounded-[2.5rem] border-4 border-indigo-500/10 hover:border-cyan-400/50 active:scale-[0.96] transition-all duration-300 relative overflow-hidden"
+            className="flex items-center justify-between p-6 bg-card rounded-[2.5rem] border-4 border-indigo-500/10 active:scale-[0.96] transition-all duration-300 relative overflow-hidden"
           >
             <div className="absolute -right-10 -bottom-10 w-32 h-32 blur-[60px] opacity-20" style={{ backgroundColor: recipe.color }} />
 
-            <div className="flex-1 pr-4 relative z-10">
+            <div className="flex-1 pr-4 relative z-10 text-left">
               <span className="text-[9px] font-black tracking-[0.25em] mb-3 block" style={{ color: recipe.color }}>
                 {recipe.category}
               </span>
-              <h3 className="text-5xl font-black text-white leading-[0.85] tracking-tighter uppercase group-hover:text-cyan-400 transition-colors">
+              <h3 className="text-5xl font-black text-white leading-[0.85] tracking-tighter uppercase">
                 {recipe.title}
               </h3>
               <div className="flex items-center gap-4 mt-6 text-zinc-600 text-[11px] font-black">
@@ -198,7 +214,7 @@ const App: React.FC = () => {
             </div>
 
             <div className="relative w-20 h-20 shrink-0 bg-black rounded-2xl border-2 border-white/5 overflow-hidden shadow-2xl">
-              <img src={recipe.image} alt="" className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500" />
+              <img src={recipe.image} alt="" className="w-full h-full object-cover grayscale-[0.2]" />
             </div>
           </div>
         ))}
@@ -207,8 +223,8 @@ const App: React.FC = () => {
   );
 
   const CookingView = ({ recipe }: { recipe: Recipe }) => (
-    <div className="fixed inset-0 z-50 bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
-      <div className="relative h-[25vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
+    <div className="fixed inset-0 z-50 bg-main overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
+      <div className="relative h-[25vh] shrink-0 bg-card border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
         <img src={recipe.image} className="w-full h-full object-cover opacity-20 blur-sm scale-110" alt="" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] to-transparent" />
         
@@ -229,11 +245,11 @@ const App: React.FC = () => {
       <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-40">
         <div className="grid grid-cols-3 gap-3">
           {[
-            { icon: <Clock size={18} />, val: recipe.prep, label: 'TIEMPO' },
-            { icon: <Users size={18} />, val: recipe.servings, label: 'RINDE' },
-            { icon: <Flame size={18} />, val: recipe.difficulty, label: 'NIVEL' }
+            { icon: <Clock size={18} />, val: recipe.prep, label: 'TIME' },
+            { icon: <Users size={18} />, val: recipe.servings, label: 'SIZE' },
+            { icon: <Flame size={18} />, val: recipe.difficulty, label: 'LVL' }
           ].map((s, i) => (
-            <div key={i} className="bg-[#0A0E1A] border-2 border-white/5 p-4 rounded-3xl text-center">
+            <div key={i} className="bg-card border-2 border-white/5 p-4 rounded-3xl text-center">
               <div className="flex justify-center mb-2" style={{ color: recipe.color }}>{s.icon}</div>
               <p className="text-white font-black text-sm leading-none">{s.val}</p>
               <p className="text-[8px] font-bold text-zinc-700 mt-1 uppercase tracking-widest">{s.label}</p>
@@ -254,13 +270,13 @@ const App: React.FC = () => {
                 key={i} 
                 onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))}
                 className={`flex items-center justify-between p-5 rounded-[2.2rem] transition-all border-2 ${
-                  checked[`i-${i}`] ? 'bg-zinc-900 border-transparent opacity-20' : 'bg-[#0A0E1A] border-white/5 shadow-xl'
+                  checked[`i-${i}`] ? 'bg-zinc-900 border-transparent opacity-20' : 'bg-card border-white/5 shadow-xl'
                 }`}
               >
                 <span className={`text-xl font-bold flex-1 pr-4 ${checked[`i-${i}`] ? 'line-through text-zinc-700' : 'text-zinc-200'}`}>
                   {ing.text}
                 </span>
-                <div className={`w-8 h-8 rounded-xl border-4 shrink-0 flex items-center justify-center transition-all ${
+                <div className={`w-8 h-8 rounded-xl border-4 shrink-0 flex items-center justify-center ${
                   checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_15px_#22d3ee]' : 'border-zinc-800'
                 }`}>
                   {checked[`i-${i}`] && <CheckCircle2 size={18} className="text-black stroke-[4px]" />}
@@ -292,7 +308,7 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        <div className="bg-[#0A0E1A] p-10 rounded-[3.5rem] border-4 border-white/5 mb-10 text-left">
+        <div className="bg-card p-10 rounded-[3.5rem] border-4 border-white/5 mb-10 text-left">
            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400 mb-4 block">CHEF NOTE // SYSTEM LOG</span>
            <p className="text-zinc-500 text-xl italic font-bold leading-relaxed">"{recipe.tip}"</p>
         </div>
@@ -310,7 +326,7 @@ const App: React.FC = () => {
   );
 
   return (
-    <div className="font-sans antialiased text-white selection:bg-cyan-500 selection:text-black bg-[#05070A]">
+    <div className="font-sans antialiased text-white selection:bg-cyan-500 selection:text-black bg-main">
       {selectedRecipe ? <CookingView recipe={selectedRecipe} /> : <Dashboard />}
     </div>
   );
