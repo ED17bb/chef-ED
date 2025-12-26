@@ -7,7 +7,6 @@ import {
   ArrowLeft, 
   BookOpen, 
   Flame,
-  Info,
   Filter,
   Sparkles
 } from 'lucide-react';
@@ -119,9 +118,8 @@ const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-  // RESET GLOBAL Y CONFIGURACIÓN MÓVIL (CRUCIAL)
+  // RESET GLOBAL Y CONFIGURACIÓN MÓVIL
   useEffect(() => {
-    // Forzamos el viewport para que las letras no se vean chiquitas
     const meta = document.createElement('meta');
     meta.name = "viewport";
     meta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0";
@@ -134,10 +132,10 @@ const App: React.FC = () => {
         width: 100%; 
         height: 100%; 
         background-color: #05070A !important;
-        font-size: 16px; /* Base sólida para móvil */
+        font-size: 16px; 
       }
       #root { display: block !important; }
-      ::-webkit-scrollbar { display: none; } /* Ocultar scrollbars para look nativo */
+      ::-webkit-scrollbar { display: none; }
     `;
     document.head.appendChild(style);
     return () => { 
@@ -148,7 +146,7 @@ const App: React.FC = () => {
 
   const filteredRecipes = useMemo(() => INITIAL_RECIPES, []);
 
-  // DASHBOARD OPTIMIZADO PARA CELULAR
+  // DASHBOARD MÓVIL
   const Dashboard = () => (
     <div className="flex flex-col min-h-screen bg-[#05070A] overflow-x-hidden">
       <header className="px-5 pt-12 pb-5 flex justify-between items-center bg-[#0A0E1A] border-b-2 border-indigo-500/20">
@@ -169,7 +167,7 @@ const App: React.FC = () => {
         </div>
         <h2 className="text-5xl font-black text-white tracking-tighter leading-[0.85]">
           HOLA,<br/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">ERNESTO</span>.
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 uppercase">ERNESTO</span>.
         </h2>
       </div>
 
@@ -190,17 +188,15 @@ const App: React.FC = () => {
               <span className="text-[8px] font-black tracking-[0.2em] mb-1.5 block opacity-60" style={{ color: recipe.color }}>
                 {recipe.category}
               </span>
-              {/* Título GIGANTE comparado con la imagen */}
               <h3 className="text-4xl font-black text-white leading-[0.8] tracking-tighter uppercase">
                 {recipe.title}
               </h3>
-              <div className="flex items-center gap-3 mt-4 text-zinc-600 text-[10px] font-bold">
+              <div className="flex items-center gap-4 mt-4 text-zinc-600 text-[10px] font-bold">
                 <span className="flex items-center gap-1"><Clock size={12} /> {recipe.prep}</span>
                 <span className="flex items-center gap-1"><Users size={12} /> {recipe.servings}</span>
               </div>
             </div>
 
-            {/* Imagen PEQUEÑA (Secundaria) */}
             <div className="relative w-14 h-14 shrink-0 bg-black rounded-xl border border-white/5 overflow-hidden">
               <img src={recipe.image} alt="" className="w-full h-full object-cover grayscale-[0.2]" />
             </div>
@@ -210,10 +206,9 @@ const App: React.FC = () => {
     </div>
   );
 
-  // DETALLE OPTIMIZADO PARA CELULAR
+  // DETALLE MÓVIL
   const CookingView = ({ recipe }: { recipe: Recipe }) => (
     <div className="fixed inset-0 z-50 bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-400">
-      {/* Cabecera con imagen pequeña */}
       <div className="relative h-[25vh] shrink-0 bg-[#0A0E1A]">
         <img src={recipe.image} className="w-full h-full object-cover opacity-30 blur-[2px]" alt="" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] to-transparent" />
@@ -233,7 +228,6 @@ const App: React.FC = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-8 space-y-10 pb-32">
-        {/* Stats compactos */}
         <div className="grid grid-cols-3 gap-2">
           {[
             { icon: <Clock size={14} />, val: recipe.prep, label: 'TIEMPO' },
@@ -248,7 +242,6 @@ const App: React.FC = () => {
           ))}
         </div>
 
-        {/* Ingredientes con texto legible */}
         <section className="text-left">
           <div className="flex items-center gap-2 mb-6">
             <BookOpen size={16} className="text-indigo-400" />
@@ -276,7 +269,6 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* Pasos con texto GRANDE */}
         <section className="text-left">
           <div className="flex items-center gap-2 mb-8">
             <Flame size={16} className="text-indigo-400" />
@@ -297,14 +289,12 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* Tip */}
         <div className="bg-[#0A0E1A] p-6 rounded-[2rem] border border-white/5 mb-10 relative text-left">
            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-cyan-500 mb-2 block">CHEF NOTE</span>
            <p className="text-zinc-400 text-sm italic font-bold">"{recipe.tip}"</p>
         </div>
       </div>
 
-      {/* Botón de cierre gigante */}
       <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#05070A] to-transparent">
         <button 
           onClick={() => setSelectedRecipe(null)}
