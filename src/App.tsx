@@ -31,7 +31,7 @@ interface Recipe {
   color: string;
 }
 
-// --- DATA CURADA ---
+// --- DATA CURADA (Matilda, Casero, Jamón) ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -118,9 +118,8 @@ const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-  // --- ESCUDO DE ESTILOS GLOBALES (FUERZA BRUTA) ---
+  // --- ESCUDO DE ESTILOS GLOBALES ---
   useEffect(() => {
-    // Forzamos el Viewport para móviles
     const meta = document.createElement('meta');
     meta.name = "viewport";
     meta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0";
@@ -129,9 +128,7 @@ const App: React.FC = () => {
     const style = document.createElement('style');
     style.innerHTML = `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
-      
       * { margin: 0; padding: 0; box-sizing: border-box !important; -webkit-tap-highlight-color: transparent; }
-      
       body, html, #root { 
         width: 100% !important; 
         min-height: 100vh !important; 
@@ -141,20 +138,7 @@ const App: React.FC = () => {
         display: block !important;
         text-align: left !important;
       }
-
-      /* Clases de utilidad forzadas por si Tailwind falla */
-      .bg-main { background-color: #05070A !important; }
-      .bg-card { background-color: #0A0E1A !important; }
-      .text-cyan { color: #22d3ee !important; }
-      .text-indigo { color: #818cf8 !important; }
-      .text-neon-name {
-        background: linear-gradient(to right, #22d3ee, #6366f1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      
       #root { max-width: none !important; margin: 0 !important; padding: 0 !important; }
-      ::-webkit-scrollbar { display: none; }
     `;
     document.head.appendChild(style);
     return () => { 
@@ -164,57 +148,75 @@ const App: React.FC = () => {
   }, []);
 
   const Dashboard = () => (
-    <div className="flex flex-col min-h-screen bg-main overflow-x-hidden text-left">
-      <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-card border-b-4 border-indigo-500/30">
-        <div className="flex items-center gap-3">
-          <div className="w-3 h-3 bg-cyan shadow-[0_0_15px_#22d3ee] rounded-sm" />
-          <h1 className="text-[10px] font-black tracking-[0.5em] text-white/50 uppercase">CHEF ED</h1>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#05070A', width: '100%' }}>
+      {/* Header */}
+      <header style={{ padding: '60px 24px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#0A0E1A', borderBottom: '4px solid rgba(99, 102, 241, 0.3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '12px', height: '12px', backgroundColor: '#22d3ee', boxShadow: '0 0 15px #22d3ee' }} />
+          <h1 style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '0.5em', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>CHEF ED</h1>
         </div>
-        <div className="flex gap-6">
-          <Search size={22} className="text-indigo" />
-          <Filter size={22} className="text-indigo" />
+        <div style={{ display: 'flex', gap: '24px', color: '#818cf8' }}>
+          <Search size={22} />
+          <Filter size={22} />
         </div>
       </header>
 
-      <div className="px-8 pt-12 pb-4">
-        <div className="flex items-center gap-2 mb-4">
-          <Sparkles size={14} className="text-cyan" />
-          <span className="text-[10px] font-black text-indigo uppercase tracking-widest underline decoration-cyan-400 decoration-2 underline-offset-4 italic">Digital Workspace</span>
+      {/* Saludo Ernesto */}
+      <div style={{ padding: '48px 32px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+          <Sparkles size={14} color="#22d3ee" />
+          <span style={{ fontSize: '10px', fontWeight: 900, color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Digital Workspace</span>
         </div>
-        <h2 className="text-6xl font-black text-white tracking-tighter leading-[0.8] mb-2">
+        <h2 style={{ fontSize: '64px', fontWeight: 900, color: 'white', letterSpacing: '-0.05em', lineHeight: '0.8', marginBottom: '8px' }}>
           HOLA,<br/>
-          <span className="text-neon-name uppercase">ERNESTO</span>.
+          <span style={{ background: 'linear-gradient(to right, #22d3ee, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textTransform: 'uppercase' }}>
+            ERNESTO</span>.
         </h2>
       </div>
 
-      <div className="flex-1 px-6 space-y-6 mt-12 pb-32">
+      {/* Lista de Recetas - ESTILOS HARDCODED */}
+      <div style={{ flex: 1, padding: '0 24px 120px', display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '32px' }}>
         {INITIAL_RECIPES.map((recipe) => (
           <div 
             key={recipe.id}
-            onClick={() => {
-              setSelectedRecipe(recipe);
-              setChecked({});
-              window.scrollTo(0,0);
+            onClick={() => { setSelectedRecipe(recipe); window.scrollTo(0,0); }}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between', 
+              padding: '24px', 
+              backgroundColor: '#0A0E1A', 
+              borderRadius: '40px', 
+              border: '4px solid rgba(129, 140, 248, 0.1)',
+              position: 'relative',
+              overflow: 'hidden'
             }}
-            className="flex items-center justify-between p-6 bg-card rounded-[2.5rem] border-4 border-indigo-500/10 active:scale-[0.96] transition-all duration-300 relative overflow-hidden"
           >
-            <div className="absolute -right-10 -bottom-10 w-32 h-32 blur-[60px] opacity-20" style={{ backgroundColor: recipe.color }} />
-
-            <div className="flex-1 pr-4 relative z-10 text-left">
-              <span className="text-[9px] font-black tracking-[0.25em] mb-3 block" style={{ color: recipe.color }}>
+            <div style={{ flex: 1, paddingRight: '16px', position: 'relative', zIndex: 10 }}>
+              <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.25em', marginBottom: '12px', display: 'block', color: recipe.color }}>
                 {recipe.category}
               </span>
-              <h3 className="text-5xl font-black text-white leading-[0.85] tracking-tighter uppercase">
+              {/* Título de receta forzado a ser GIGANTE */}
+              <h3 style={{ fontSize: '48px', fontWeight: 900, color: 'white', lineHeight: '0.85', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
                 {recipe.title}
               </h3>
-              <div className="flex items-center gap-4 mt-6 text-zinc-600 text-[11px] font-black">
-                <span className="flex items-center gap-1.5"><Clock size={14} /> {recipe.prep}</span>
-                <span className="flex items-center gap-1.5"><Users size={14} /> {recipe.servings}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '24px', color: '#444', fontSize: '11px', fontWeight: 900 }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14} /> {recipe.prep}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Users size={14} /> {recipe.servings}</span>
               </div>
             </div>
 
-            <div className="relative w-20 h-20 shrink-0 bg-black rounded-2xl border-2 border-white/5 overflow-hidden shadow-2xl">
-              <img src={recipe.image} alt="" className="w-full h-full object-cover grayscale-[0.2]" />
+            {/* Imagen forzada a 3x3 cm (aprox 80px) */}
+            <div style={{ 
+              width: '80px', 
+              height: '80px', 
+              flexShrink: 0, 
+              backgroundColor: 'black', 
+              borderRadius: '24px', 
+              border: '2px solid rgba(255,255,255,0.05)', 
+              overflow: 'hidden' 
+            }}>
+              <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(0.2)' }} alt="" />
             </div>
           </div>
         ))}
@@ -223,101 +225,97 @@ const App: React.FC = () => {
   );
 
   const CookingView = ({ recipe }: { recipe: Recipe }) => (
-    <div className="fixed inset-0 z-50 bg-main overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
-      <div className="relative h-[25vh] shrink-0 bg-card border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
-        <img src={recipe.image} className="w-full h-full object-cover opacity-20 blur-sm scale-110" alt="" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] to-transparent" />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'relative', height: '25vh', flexShrink: 0, backgroundColor: '#0A0E1A', borderBottom: `8px solid ${recipe.color}33` }}>
+        <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.2, filter: 'blur(4px) scale(1.1)' }} alt="" />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #05070A, transparent)' }} />
         
         <button 
           onClick={() => setSelectedRecipe(null)}
-          className="absolute top-14 left-6 w-12 h-12 rounded-full bg-white/5 backdrop-blur-xl border-2 border-white/10 flex items-center justify-center text-white"
+          style={{ position: 'absolute', top: '56px', left: '24px', width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.05)', border: '2px solid rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           <ArrowLeft size={24} />
         </button>
 
-        <div className="absolute bottom-6 left-8 right-8 text-left">
-          <h2 className="text-6xl font-black text-white leading-[0.8] tracking-tighter uppercase">
+        <div style={{ position: 'absolute', bottom: '24px', left: '32px', right: '32px' }}>
+          <h2 style={{ fontSize: '56px', fontWeight: 900, color: 'white', lineHeight: '0.8', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
             {recipe.title}
           </h2>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-40">
-        <div className="grid grid-cols-3 gap-3">
+      <div style={{ flex: 1, overflowY: 'auto', padding: '40px 32px 160px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '48px' }}>
           {[
             { icon: <Clock size={18} />, val: recipe.prep, label: 'TIME' },
             { icon: <Users size={18} />, val: recipe.servings, label: 'SIZE' },
             { icon: <Flame size={18} />, val: recipe.difficulty, label: 'LVL' }
           ].map((s, i) => (
-            <div key={i} className="bg-card border-2 border-white/5 p-4 rounded-3xl text-center">
-              <div className="flex justify-center mb-2" style={{ color: recipe.color }}>{s.icon}</div>
-              <p className="text-white font-black text-sm leading-none">{s.val}</p>
-              <p className="text-[8px] font-bold text-zinc-700 mt-1 uppercase tracking-widest">{s.label}</p>
+            <div key={i} style={{ backgroundColor: '#0A0E1A', border: '2px solid rgba(255,255,255,0.05)', padding: '16px', borderRadius: '24px', textAlign: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px', color: recipe.color }}>{s.icon}</div>
+              <p style={{ color: 'white', fontWeight: 900, fontSize: '14px' }}>{s.val}</p>
+              <p style={{ fontSize: '8px', fontWeight: 700, color: '#444', marginTop: '4px', letterSpacing: '0.1em' }}>{s.label}</p>
             </div>
           ))}
         </div>
 
-        <section className="text-left">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
+        <section style={{ marginBottom: '48px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
               <BookOpen size={20} />
             </div>
-            <h3 className="text-xl font-black tracking-tighter uppercase text-white">COMPONENTES</h3>
+            <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>COMPONENTES</h3>
           </div>
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {recipe.ingredients.map((ing, i) => (
               <div 
                 key={i} 
                 onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))}
-                className={`flex items-center justify-between p-5 rounded-[2.2rem] transition-all border-2 ${
-                  checked[`i-${i}`] ? 'bg-zinc-900 border-transparent opacity-20' : 'bg-card border-white/5 shadow-xl'
-                }`}
+                style={{ 
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', 
+                  borderRadius: '32px', border: '2px solid rgba(255,255,255,0.05)', backgroundColor: '#0A0E1A',
+                  opacity: checked[`i-${i}`] ? 0.2 : 1
+                }}
               >
-                <span className={`text-xl font-bold flex-1 pr-4 ${checked[`i-${i}`] ? 'line-through text-zinc-700' : 'text-zinc-200'}`}>
-                  {ing.text}
-                </span>
-                <div className={`w-8 h-8 rounded-xl border-4 shrink-0 flex items-center justify-center ${
-                  checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_15px_#22d3ee]' : 'border-zinc-800'
-                }`}>
-                  {checked[`i-${i}`] && <CheckCircle2 size={18} className="text-black stroke-[4px]" />}
+                <span style={{ fontSize: '18px', fontWeight: 900, flex: 1, paddingRight: '16px', textDecoration: checked[`i-${i}`] ? 'line-through' : 'none' }}>{ing.text}</span>
+                <div style={{ width: '32px', height: '32px', borderRadius: '12px', border: '4px solid #222', backgroundColor: checked[`i-${i}`] ? '#22d3ee' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {checked[`i-${i}`] && <CheckCircle2 size={18} color="black" strokeWidth={4} />}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="text-left">
-          <div className="flex items-center gap-3 mb-10">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
+        <section style={{ marginBottom: '48px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
               <Flame size={20} />
             </div>
-            <h3 className="text-xl font-black tracking-tighter uppercase text-white">EJECUCIÓN</h3>
+            <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>EJECUCIÓN</h3>
           </div>
-          <div className="space-y-12 relative pl-6">
-            <div className="absolute left-6 top-8 bottom-8 w-[4px] bg-zinc-900 rounded-full" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '48px', position: 'relative', paddingLeft: '24px' }}>
+            <div style={{ position: 'absolute', left: '24px', top: '32px', bottom: '32px', width: '4px', backgroundColor: '#111', borderRadius: '2px' }} />
             {recipe.steps.map((step, i) => (
-              <div key={i} onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))} className={`relative transition-all duration-300 ${checked[`s-${i}`] ? 'opacity-20' : ''}`}>
-                <div className={`absolute -left-[2.65rem] top-0 w-11 h-11 rounded-2xl flex items-center justify-center text-sm font-black border-4 bg-[#05070A] z-10 ${
-                  checked[`s-${i}`] ? 'border-cyan-400 text-cyan-400 shadow-[0_0_10px_#22d3ee]' : 'border-zinc-800 text-zinc-600'
-                }`}>
+              <div key={i} onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))} style={{ position: 'relative', opacity: checked[`s-${i}`] ? 0.2 : 1 }}>
+                <div style={{ position: 'absolute', left: '-42px', top: '0', width: '40px', height: '40px', borderRadius: '16px', border: '4px solid #111', backgroundColor: '#05070A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 900, color: checked[`s-${i}`] ? '#22d3ee' : '#444' }}>
                   {i + 1}
                 </div>
-                <p className="text-2xl leading-relaxed text-zinc-200 pl-10 font-black tracking-tight">{step}</p>
+                <p style={{ fontSize: '24px', fontWeight: 900, lineHeight: '1.2', paddingLeft: '40px', letterSpacing: '-0.02em' }}>{step}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <div className="bg-card p-10 rounded-[3.5rem] border-4 border-white/5 mb-10 text-left">
-           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400 mb-4 block">CHEF NOTE // SYSTEM LOG</span>
-           <p className="text-zinc-500 text-xl italic font-bold leading-relaxed">"{recipe.tip}"</p>
+        <div style={{ backgroundColor: '#0A0E1A', padding: '40px', borderRadius: '56px', border: '4px solid rgba(255,255,255,0.05)', textAlign: 'left' }}>
+           <span style={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', color: '#22d3ee', marginBottom: '16px', display: 'block' }}>CHEF NOTE // LOG</span>
+           <p style={{ color: '#555', fontSize: '20px', fontStyle: 'italic', fontWeight: 900, lineHeight: '1.4' }}>"{recipe.tip}"</p>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-[#05070A] to-transparent">
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
         <button 
           onClick={() => setSelectedRecipe(null)}
-          className="w-full bg-indigo-600 text-white font-black py-6 rounded-[2.5rem] border-b-8 border-indigo-900 uppercase tracking-widest text-[11px] active:scale-95 active:border-b-0 transition-all shadow-3xl"
+          style={{ width: '100%', backgroundColor: '#4f46e5', color: 'white', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #312e81', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}
         >
            CERRAR SESIÓN
         </button>
@@ -326,7 +324,7 @@ const App: React.FC = () => {
   );
 
   return (
-    <div className="font-sans antialiased text-white selection:bg-cyan-500 selection:text-black bg-main">
+    <div style={{ backgroundColor: '#05070A', color: 'white', minHeight: '100vh' }}>
       {selectedRecipe ? <CookingView recipe={selectedRecipe} /> : <Dashboard />}
     </div>
   );
