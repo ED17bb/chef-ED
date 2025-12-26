@@ -31,7 +31,7 @@ interface Recipe {
   color: string;
 }
 
-// --- DATA CURADA (Matilda, Casero, Jamón) ---
+// --- DATA TOTALMENTE DETALLADA (ORDEN: MATILDA, CASERO, JAMÓN) ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -43,21 +43,38 @@ const INITIAL_RECIPES: Recipe[] = [
     color: "#ec4899",
     image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=800",
     ingredients: [
-      { text: "3 Huevos / 200gr Azúcar", group: "Base" },
-      { text: "100 gr Mantequilla derretida", group: "Base" },
-      { text: "280 gr Harina / 100 gr Chocolate", group: "Secos" },
-      { text: "250 ml Leche tibia", group: "Líquidos" },
-      { text: "Cubierta: Chocolate + Maicena", group: "Topping" }
+      { text: "3 Huevos", group: "Masa" },
+      { text: "100 gr Mantequilla derretida (4 cdas)", group: "Masa" },
+      { text: "200-400 gr Azúcar (según preferencia)", group: "Masa" },
+      { text: "2-3 cdas de Vainilla", group: "Masa" },
+      { text: "250 ml Leche tibia (1 taza)", group: "Masa" },
+      { text: "100 gr Chocolate en polvo (1 taza)", group: "Masa" },
+      { text: "280 gr Harina de trigo (2 tazas)", group: "Masa" },
+      { text: "1 cda Polvo de hornear", group: "Masa" },
+      { text: "1 cdita Bicarbonato de sodio", group: "Masa" },
+      { text: "1 pizca de Sal", group: "Masa" },
+      { text: "1 vaso de Agua", group: "Cubierta" },
+      { text: "4 cdas soperas de Maicena", group: "Cubierta" },
+      { text: "5 cdas Cacao en polvo", group: "Cubierta" },
+      { text: "3 cdas Mantequilla derretida", group: "Cubierta" },
+      { text: "200 gr Azúcar (1 taza)", group: "Cubierta" }
     ],
     steps: [
-      "Licuar huevos hasta espumar. Añadir azúcar y batir hasta que suba.",
-      "Incorporar mantequilla y leche. Batir.",
-      "Tamizar harina, cacao y bicarbonato. Mezclar perfecto.",
-      "Hornear a 180°C por 40 min.",
-      "Hacer cobertura de maicena y cacao hasta espesar.",
-      "Bañar la torta desmoldada con el chocolate caliente."
+      "Comenzar agregando a la licuadora los huevos y mezclarlos hasta que generen bastante espuma.",
+      "Agregar el azúcar y volver a batir hasta que la mezcla suba de tamaño notablemente.",
+      "Incorporar la mantequilla derretida, la vainilla y la leche tibia; volver a batir brevemente para integrar.",
+      "Preparar los ingredientes secos con la ayuda de un colador (tamizado): agregar el cacao, la harina, la pizca de sal y la cucharadita de bicarbonato de sodio.",
+      "Con mucho cuidado, batir y mezclar todo de forma manual o a baja velocidad para que se integre de forma perfecta y sin grumos.",
+      "Finalmente, agregar la cucharada de polvo de hornear y seguir batiendo suavemente hasta conseguir una masa homogénea.",
+      "Preparar un molde esparciendo mantequilla y enharinando toda su superficie.",
+      "Verter la mezcla en el molde y llevar al horno precalentado a 180°C por unos 30-40 minutos (revisar con un palito hasta que salga seco).",
+      "Preparación de la cubierta: En una olla con el fuego todavía APAGADO, agregar el vaso de agua y las 4 cucharadas de maicena.",
+      "Mezclar con un colador o batidor de mano hasta que la maicena se integre bien y no queden grumos.",
+      "Agregar las 5 cucharadas de cacao, la mantequilla derretida y el azúcar.",
+      "Encender la hornilla a fuego medio y cocinar mezclando constantemente hasta que espese al punto deseado y brille.",
+      "Desmoldar la torta ya fría en el plato de servir y cubrir generosamente con el baño de chocolate caliente."
     ],
-    tip: "No escatimes en el batido de los huevos, es la clave de la textura Matilda."
+    tip: "El éxito de esta torta reside en el batido inicial de los huevos; cuanto más aire tengan, más esponjosa será la Matilda."
   },
   {
     id: 'casero',
@@ -69,20 +86,26 @@ const INITIAL_RECIPES: Recipe[] = [
     color: "#a855f7",
     image: "https://images.unsplash.com/photo-1597079910443-60c43fc4f729?auto=format&fit=crop&q=80&w=800",
     ingredients: [
-      { text: "500 gr Harina", group: "Secos" },
-      { text: "300 ml Agua tibia", group: "Líquidos" },
-      { text: "15 gr Sal / 10 gr Levadura", group: "Base" },
+      { text: "500 gr Harina de trigo", group: "Base" },
+      { text: "300 ml Agua tibia", group: "Base" },
+      { text: "15 gr Sal", group: "Base" },
+      { text: "10 gr Levadura seca", group: "Base" },
+      { text: "1/2 cucharada de Azúcar (~4g)", group: "Base" },
       { text: "30-40 gr Manteca", group: "Grasas" }
     ],
     steps: [
-      "Activar levadura con azúcar en agua tibia.",
-      "Unir secos con líquidos e integrar la manteca.",
-      "Amasar 10 min. Reposo de 30 min.",
-      "Dividir en 6. Formar burritos presionando con la palma.",
-      "Colocar en bandeja y hacer cortes diagonales.",
-      "Leudar 1 hora y hornear a 190°C por 15 min."
+      "En un bol pequeño, mezclar el agua tibia con la levadura y el azúcar para activarla hasta que espume.",
+      "En otro bol grande, mezclar la harina con la sal de forma homogénea.",
+      "Unir el contenido de ambos bols, mezclar e integrar la manteca a temperatura ambiente.",
+      "Retirar la masa al mesón y amasar enérgicamente por unos 10 minutos hasta obtener una masa elástica y suave.",
+      "Dejar reposar la masa en un bol aceitado y tapada en un lugar cálido por 30 minutos.",
+      "Pasado el tiempo, desgasificar ligeramente y dividir la masa en 6 partes iguales.",
+      "Estirar cada parte, abollar y, con la palma de la mano, ir presionando mientras se enrolla como un 'burrito' para dar tensión.",
+      "Colocar los panes en una bandeja apenas aceitada y, con un cuchillo afilado, hacer unos cortes diagonales decorativos.",
+      "Tapar con un paño y dejar reposar por 1 hora hasta que aumenten significativamente su tamaño (duplicar).",
+      "Llevar al horno precalentado a 180°C-200°C por 10 a 15 minutos hasta que estén dorados."
     ],
-    tip: "Si al presionar la huella vuelve lento, el pan pide horno inmediatamente."
+    tip: "Para saber si está listo para el horno, usa la 'prueba de la huella'. Si presionas y la masa vuelve lento, es el momento perfecto."
   },
   {
     id: 'jamon',
@@ -95,22 +118,39 @@ const INITIAL_RECIPES: Recipe[] = [
     image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800",
     ingredients: [
       { text: "500-800 gr Harina 000", group: "Masa" },
-      { text: "260 ml Agua / 60 gr Azúcar", group: "Masa" },
-      { text: "100 gr Margarina / 2 Huevos", group: "Masa" },
-      { text: "10 gr Levadura / 10 gr Sal", group: "Masa" },
-      { text: "1 Kg Jamón / 250 gr Panceta", group: "Relleno" },
-      { text: "150 gr Aceitunas / 150 gr Pasas", group: "Relleno" }
+      { text: "260 ml Agua", group: "Masa" },
+      { text: "60 gr Azúcar", group: "Masa" },
+      { text: "100 gr Margarina", group: "Masa" },
+      { text: "2 Huevos", group: "Masa" },
+      { text: "10 gr Levadura", group: "Masa" },
+      { text: "10 gr Sal", group: "Masa" },
+      { text: "1 Kg Jamón ahumado", group: "Relleno" },
+      { text: "250 gr Panceta (Tocineta)", group: "Relleno" },
+      { text: "150 gr Aceitunas rellenas", group: "Relleno" },
+      { text: "150 gr Pasas", group: "Relleno" },
+      { text: "Queso Crema (Opcional)", group: "Relleno" }
     ],
     steps: [
-      "Mezclar azúcar con agua y activar levadura.",
-      "Integrar harina, huevo y sal. Amasar 10 min añadiendo margarina.",
-      "Leudar 1 hora. Extender masa muy delgada (40-50cm).",
-      "Colocar aceitunas en el borde y envolver.",
-      "Cubrir con jamón, pasas y panceta diagonal. Enrollar.",
-      "Pintar con huevo y pinchar con tenedor.",
-      "Hornear a 180°C por 30 min. Barnizar con caramelo y 10 min más."
+      "Comenzar agregando el azúcar en un bol con el agua y mezclar bien.",
+      "Agregar la levadura, luego incorporar 1 huevo y mezclar nuevamente.",
+      "Agregar la harina (aproximadamente 500gr inicialmente) y mezclar hasta integrar la masa base.",
+      "Luego de mezclar los primeros ingredientes, agregar la sal.",
+      "Retirar la masa y amasar en el mesón durante 10 minutos. Durante este proceso, agregar la margarina dividida en 2 partes.",
+      "Agregar un poco más de harina gradualmente hasta tener una masa suave y lisa que no se pegue a la mesa (el peso final será de aproximadamente 1.2kg).",
+      "Dividir la masa en 2 mitades iguales para hacer dos panes.",
+      "Envolver en film o paño y dejar que actúe la levadura por 1 hora (o mínimo 30 min) en un lugar cálido.",
+      "Enharinar el mesón y extender la masa entre 40-50 cm de largo hasta que esté bien delgada.",
+      "Hacer una hilera de aceitunas en el borde de la masa y envolverlas primero para que queden en el centro.",
+      "Cubrir el resto con el queso crema (opcional), luego el jamón, las pasas y finalmente la panceta colocada en diagonal.",
+      "Enrollar con mucha suavidad de forma compacta.",
+      "Pintar el borde final con huevo batido para asegurar que se pegue bien y no se abra.",
+      "Clavar un tenedor por todo el pan de forma profunda para permitir la salida del vapor durante la cocción.",
+      "Llevar el pan a la bandeja y pintar toda la superficie con huevo. Dejar leudar por 1 hora adicional.",
+      "Preparar el barniz: En una olla pequeña, agregar 1/4 taza de azúcar con un chorrito de agua a alta temperatura hasta lograr un color caramelo líquido poco espeso.",
+      "Meter el pan al horno precalentado a 180°C por 25-30 min.",
+      "Sacar el pan, pintar generosamente con el barniz de caramelo y devolver al horno por 10 min más hasta que esté oscuro y brillante."
     ],
-    tip: "Usa un paño de algodón fino para guardarlo en la heladera. ¡Sabe mejor al día siguiente!"
+    tip: "Conservación: Debido al jamón, guárdalo en la heladera envuelto en tela delgada de algodón. Recalienta a 170°C para que la masa recupere su frescura."
   }
 ];
 
@@ -118,7 +158,7 @@ const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-  // --- ESCUDO DE ESTILOS GLOBALES ---
+  // --- ESCUDO DE ESTILOS GLOBALES (FUERZA BRUTA) ---
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = "viewport";
@@ -139,6 +179,7 @@ const App: React.FC = () => {
         text-align: left !important;
       }
       #root { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+      ::-webkit-scrollbar { display: none; }
     `;
     document.head.appendChild(style);
     return () => { 
@@ -174,12 +215,12 @@ const App: React.FC = () => {
         </h2>
       </div>
 
-      {/* Lista de Recetas - ESTILOS HARDCODED */}
+      {/* Lista de Recetas - ESTILOS HARDCODED PARA MÓVIL */}
       <div style={{ flex: 1, padding: '0 24px 120px', display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '32px' }}>
         {INITIAL_RECIPES.map((recipe) => (
           <div 
             key={recipe.id}
-            onClick={() => { setSelectedRecipe(recipe); window.scrollTo(0,0); }}
+            onClick={() => { setSelectedRecipe(recipe); setChecked({}); window.scrollTo(0,0); }}
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
@@ -196,7 +237,6 @@ const App: React.FC = () => {
               <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.25em', marginBottom: '12px', display: 'block', color: recipe.color }}>
                 {recipe.category}
               </span>
-              {/* Título de receta forzado a ser GIGANTE */}
               <h3 style={{ fontSize: '48px', fontWeight: 900, color: 'white', lineHeight: '0.85', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
                 {recipe.title}
               </h3>
@@ -206,7 +246,6 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Imagen forzada a 3x3 cm (aprox 80px) */}
             <div style={{ 
               width: '80px', 
               height: '80px', 
@@ -247,7 +286,7 @@ const App: React.FC = () => {
       <div style={{ flex: 1, overflowY: 'auto', padding: '40px 32px 160px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '48px' }}>
           {[
-            { icon: <Clock size={18} />, val: recipe.prep, label: 'TIME' },
+            { icon: <Clock size={18} />, val: recipe.prep, label: 'TIEMPO' },
             { icon: <Users size={18} />, val: recipe.servings, label: 'SIZE' },
             { icon: <Flame size={18} />, val: recipe.difficulty, label: 'LVL' }
           ].map((s, i) => (
@@ -317,7 +356,7 @@ const App: React.FC = () => {
           onClick={() => setSelectedRecipe(null)}
           style={{ width: '100%', backgroundColor: '#4f46e5', color: 'white', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #312e81', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}
         >
-           CERRAR SESIÓN
+           REGRESAR
         </button>
       </div>
     </div>
