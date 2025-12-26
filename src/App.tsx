@@ -31,7 +31,7 @@ interface Recipe {
   color: string;
 }
 
-// --- DATA TOTALMENTE DETALLADA (ORDEN: MATILDA, CASERO, JAMÓN) ---
+// --- DATA TOTALMENTE DETALLADA (Orden: Matilda, Casero, Jamón) ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -41,7 +41,7 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "10P",
     difficulty: "Fácil",
     color: "#ec4899",
-    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=800",
+    image: "Torta matilda.jpeg", 
     ingredients: [
       { text: "3 Huevos", group: "Masa" },
       { text: "100 gr Mantequilla derretida (4 cdas)", group: "Masa" },
@@ -84,7 +84,7 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "6U",
     difficulty: "Fácil",
     color: "#a855f7",
-    image: "https://images.unsplash.com/photo-1597079910443-60c43fc4f729?auto=format&fit=crop&q=80&w=800",
+    image: "Pan casero.jpeg",
     ingredients: [
       { text: "500 gr Harina de trigo", group: "Base" },
       { text: "300 ml Agua tibia", group: "Base" },
@@ -115,7 +115,7 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "2P",
     difficulty: "Experto",
     color: "#22d3ee",
-    image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800",
+    image: "Pan de jamon.jpeg",
     ingredients: [
       { text: "500-800 gr Harina 000", group: "Masa" },
       { text: "260 ml Agua", group: "Masa" },
@@ -158,7 +158,7 @@ const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-  // --- ESCUDO DE ESTILOS GLOBALES (FUERZA BRUTA) ---
+  // --- ESCUDO DE ESTILOS GLOBALES ---
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = "viewport";
@@ -215,7 +215,7 @@ const App: React.FC = () => {
         </h2>
       </div>
 
-      {/* Lista de Recetas - ESTILOS HARDCODED PARA MÓVIL */}
+      {/* Lista de Recetas */}
       <div style={{ flex: 1, padding: '0 24px 120px', display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '32px' }}>
         {INITIAL_RECIPES.map((recipe) => (
           <div 
@@ -246,16 +246,25 @@ const App: React.FC = () => {
               </div>
             </div>
 
+            {/* IMAGEN DE 3x3 cm (80px) */}
             <div style={{ 
               width: '80px', 
               height: '80px', 
               flexShrink: 0, 
-              backgroundColor: 'black', 
+              backgroundColor: '#111', 
               borderRadius: '24px', 
               border: '2px solid rgba(255,255,255,0.05)', 
               overflow: 'hidden' 
             }}>
-              <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(0.2)' }} alt="" />
+              <img 
+                src={recipe.image} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                alt={recipe.title}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  (e.target as HTMLImageElement).parentElement!.style.backgroundColor = recipe.color + '33';
+                }}
+              />
             </div>
           </div>
         ))}
