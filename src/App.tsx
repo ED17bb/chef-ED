@@ -31,7 +31,7 @@ interface Recipe {
   color: string;
 }
 
-// --- DATA CURADA (Orden: Matilda, Casero, Jamón) ---
+// --- DATA CURADA (Matilda, Casero, Jamón) ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -105,12 +105,12 @@ const INITIAL_RECIPES: Recipe[] = [
       "Mezclar azúcar con agua y activar levadura.",
       "Integrar harina, huevo y sal. Amasar 10 min añadiendo margarina.",
       "Leudar 1 hora. Extender masa muy delgada (40-50cm).",
-      "Colocar hilera de aceitunas en el borde y envolver.",
-      "Cubrir con jamón, pasas y panceta diagonal.",
-      "Enrollar, pinchar con tenedor y pintar con huevo.",
-      "Hornear a 180°C por 30 min. Barnizar con caramelo y 10 min finales."
+      "Colocar aceitunas en el borde y envolver.",
+      "Cubrir con jamón, pasas y panceta diagonal. Enrollar.",
+      "Pintar con huevo y pinchar con tenedor.",
+      "Hornear a 180°C por 30 min. Barnizar y 10 min más."
     ],
-    tip: "Usa un paño de algodón fino para guardarlo en la heladera. El contraste de sabor mejora al día siguiente."
+    tip: "Usa un paño de algodón fino para guardarlo en la heladera. ¡Sabe mejor al día siguiente!"
   }
 ];
 
@@ -118,7 +118,7 @@ const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-  // RESET GLOBAL DE CSS PARA EVITAR CONFLICTOS CON VERCEL/VITE
+  // --- ESCUDO DE ESTILOS GLOBALES (FUERZA BRUTA) ---
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = "viewport";
@@ -127,15 +127,18 @@ const App: React.FC = () => {
 
     const style = document.createElement('style');
     style.innerHTML = `
-      * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      /* Reset radical para anular index.css de Vite */
+      * { margin: 0; padding: 0; box-sizing: border-box !important; -webkit-tap-highlight-color: transparent; }
       body, html, #root { 
         width: 100% !important; 
-        height: 100% !important; 
+        min-height: 100vh !important; 
         background-color: #05070A !important;
         color: white !important;
-        font-family: sans-serif;
+        font-family: 'Inter', sans-serif, system-ui !important;
+        display: block !important;
+        text-align: left !important;
       }
-      #root { display: block !important; text-align: left !important; }
+      #root { max-width: none !important; margin: 0 !important; padding: 0 !important; }
       ::-webkit-scrollbar { display: none; }
     `;
     document.head.appendChild(style);
@@ -145,15 +148,13 @@ const App: React.FC = () => {
     };
   }, []);
 
-  const filteredRecipes = useMemo(() => INITIAL_RECIPES, []);
-
-  // COMPONENTE DEL PANEL PRINCIPAL
   const Dashboard = () => (
     <div className="flex flex-col min-h-screen bg-[#05070A] overflow-x-hidden text-left">
+      {/* Header Digital */}
       <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-[#0A0E1A] border-b-4 border-indigo-500/30">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 bg-cyan-400 shadow-[0_0_15px_#22d3ee] rounded-sm" />
-          <h1 className="text-[10px] font-black tracking-[0.5em] text-white/60 uppercase">CHEF ED</h1>
+          <h1 className="text-[10px] font-black tracking-[0.5em] text-white/80 uppercase">CHEF ED</h1>
         </div>
         <div className="flex gap-6">
           <Search size={22} className="text-indigo-400" />
@@ -161,19 +162,21 @@ const App: React.FC = () => {
         </div>
       </header>
 
+      {/* Saludo Gigante */}
       <div className="px-8 pt-12 pb-4">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles size={14} className="text-cyan-400" />
-          <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest underline decoration-cyan-400 decoration-2 underline-offset-4 italic">Workspace V6</span>
+          <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest underline decoration-cyan-400 decoration-2 underline-offset-4 italic">Digital Workspace</span>
         </div>
         <h2 className="text-6xl font-black text-white tracking-tighter leading-[0.8] mb-2">
           HOLA,<br/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-indigo-600 uppercase">ERNESTO</span>.
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-500 to-indigo-700 uppercase">ERNESTO</span>.
         </h2>
       </div>
 
+      {/* Lista de Recetas - Titulos Grandes / Imagen 3x3 cm */}
       <div className="flex-1 px-6 space-y-6 mt-12 pb-32">
-        {filteredRecipes.map((recipe) => (
+        {INITIAL_RECIPES.map((recipe) => (
           <div 
             key={recipe.id}
             onClick={() => {
@@ -181,16 +184,15 @@ const App: React.FC = () => {
               setChecked({});
               window.scrollTo(0,0);
             }}
-            className="flex items-center justify-between p-6 bg-[#0A0E1A] rounded-[2.5rem] border-4 border-indigo-500/10 active:scale-[0.96] transition-all duration-300 group relative overflow-hidden"
+            className="flex items-center justify-between p-6 bg-[#0A0E1A] rounded-[2.5rem] border-4 border-indigo-500/10 active:scale-[0.96] transition-all duration-300 relative overflow-hidden"
           >
-            {/* Resplandor de fondo dinámico */}
             <div className="absolute -right-10 -bottom-10 w-32 h-32 blur-[60px] opacity-20" style={{ backgroundColor: recipe.color }} />
 
             <div className="flex-1 pr-4 relative z-10">
               <span className="text-[9px] font-black tracking-[0.25em] mb-3 block" style={{ color: recipe.color }}>
                 {recipe.category}
               </span>
-              {/* TÍTULO GIGANTE */}
+              {/* TITULO MUCHO MÁS GRANDE QUE LA IMAGEN */}
               <h3 className="text-5xl font-black text-white leading-[0.85] tracking-tighter uppercase group-hover:text-cyan-400 transition-colors">
                 {recipe.title}
               </h3>
@@ -200,10 +202,9 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* IMAGEN PEQUEÑA (3x3 cm aprox) */}
+            {/* IMAGEN PEQUEÑA (Efecto 3x3 cm) */}
             <div className="relative w-20 h-20 shrink-0 bg-black rounded-2xl border-2 border-white/5 overflow-hidden shadow-2xl">
               <img src={recipe.image} alt="" className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent" />
             </div>
           </div>
         ))}
@@ -211,27 +212,28 @@ const App: React.FC = () => {
     </div>
   );
 
-  // COMPONENTE DE VISTA DE RECETA
   const CookingView = ({ recipe }: { recipe: Recipe }) => (
     <div className="fixed inset-0 z-50 bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
-      <div className="relative h-[28vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
+      {/* Cabecera Detalle */}
+      <div className="relative h-[25vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
         <img src={recipe.image} className="w-full h-full object-cover opacity-20 blur-sm scale-110" alt="" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] to-transparent" />
         
         <button 
           onClick={() => setSelectedRecipe(null)}
-          className="absolute top-14 left-6 w-12 h-12 rounded-full bg-white/5 backdrop-blur-xl border-2 border-white/10 flex items-center justify-center text-white active:scale-90 transition-transform"
+          className="absolute top-14 left-6 w-12 h-12 rounded-full bg-white/5 backdrop-blur-xl border-2 border-white/10 flex items-center justify-center text-white"
         >
           <ArrowLeft size={24} />
         </button>
 
         <div className="absolute bottom-6 left-8 right-8 text-left">
-          <h2 className="text-6xl font-black text-white leading-[0.8] tracking-tighter uppercase drop-shadow-2xl">
+          <h2 className="text-6xl font-black text-white leading-[0.8] tracking-tighter uppercase">
             {recipe.title}
           </h2>
         </div>
       </div>
 
+      {/* Cuerpo de la Receta */}
       <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-40">
         <div className="grid grid-cols-3 gap-3">
           {[
@@ -241,12 +243,13 @@ const App: React.FC = () => {
           ].map((s, i) => (
             <div key={i} className="bg-[#0A0E1A] border-2 border-white/5 p-4 rounded-3xl text-center">
               <div className="flex justify-center mb-2" style={{ color: recipe.color }}>{s.icon}</div>
-              <p className="text-white font-black text-sm">{s.val}</p>
+              <p className="text-white font-black text-sm leading-none">{s.val}</p>
               <p className="text-[8px] font-bold text-zinc-700 mt-1 uppercase tracking-widest">{s.label}</p>
             </div>
           ))}
         </div>
 
+        {/* Ingredientes con texto grande */}
         <section className="text-left">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
@@ -259,23 +262,24 @@ const App: React.FC = () => {
               <div 
                 key={i} 
                 onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))}
-                className={`flex items-center justify-between p-5 rounded-[2rem] transition-all border-2 ${
-                  checked[`i-${i}`] ? 'bg-zinc-900 border-transparent opacity-20' : 'bg-[#0A0E1A] border-white/5'
+                className={`flex items-center justify-between p-5 rounded-[2.2rem] transition-all border-2 ${
+                  checked[`i-${i}`] ? 'bg-zinc-900 border-transparent opacity-20' : 'bg-[#0A0E1A] border-white/5 shadow-xl'
                 }`}
               >
-                <span className={`text-lg font-bold flex-1 pr-4 ${checked[`i-${i}`] ? 'line-through text-zinc-700' : 'text-zinc-200'}`}>
+                <span className={`text-xl font-bold flex-1 pr-4 ${checked[`i-${i}`] ? 'line-through text-zinc-700' : 'text-zinc-200'}`}>
                   {ing.text}
                 </span>
-                <div className={`w-7 h-7 rounded-xl border-3 shrink-0 flex items-center justify-center transition-all ${
+                <div className={`w-8 h-8 rounded-xl border-4 shrink-0 flex items-center justify-center ${
                   checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_15px_#22d3ee]' : 'border-zinc-800'
                 }`}>
-                  {checked[`i-${i}`] && <CheckCircle2 size={16} className="text-black stroke-[4px]" />}
+                  {checked[`i-${i}`] && <CheckCircle2 size={18} className="text-black stroke-[4px]" />}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
+        {/* Pasos con texto editorial */}
         <section className="text-left">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
@@ -287,29 +291,31 @@ const App: React.FC = () => {
             <div className="absolute left-6 top-8 bottom-8 w-[4px] bg-zinc-900 rounded-full" />
             {recipe.steps.map((step, i) => (
               <div key={i} onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))} className={`relative transition-all duration-300 ${checked[`s-${i}`] ? 'opacity-20' : ''}`}>
-                <div className={`absolute -left-[2.5rem] top-0 w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black border-4 bg-[#05070A] z-10 ${
+                <div className={`absolute -left-[2.65rem] top-0 w-11 h-11 rounded-2xl flex items-center justify-center text-sm font-black border-4 bg-[#05070A] z-10 ${
                   checked[`s-${i}`] ? 'border-cyan-400 text-cyan-400 shadow-[0_0_10px_#22d3ee]' : 'border-zinc-800 text-zinc-600'
                 }`}>
                   {i + 1}
                 </div>
-                <p className="text-xl leading-relaxed text-zinc-200 pl-10 font-bold">{step}</p>
+                <p className="text-2xl leading-relaxed text-zinc-200 pl-10 font-black tracking-tight">{step}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <div className="bg-[#0A0E1A] p-8 rounded-[3rem] border-4 border-white/5 mb-10 relative text-left">
-           <span className="text-[9px] font-black uppercase tracking-[0.4em] text-cyan-400 mb-3 block">CHEF NOTE // SYSTEM LOG</span>
-           <p className="text-zinc-500 text-base italic font-bold leading-relaxed">"{recipe.tip}"</p>
+        {/* Nota del Chef */}
+        <div className="bg-[#0A0E1A] p-10 rounded-[3.5rem] border-4 border-white/5 mb-10 text-left">
+           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400 mb-4 block">CHEF NOTE // SYSTEM LOG</span>
+           <p className="text-zinc-500 text-xl italic font-bold leading-relaxed">"{recipe.tip}"</p>
         </div>
       </div>
 
+      {/* Botón Flotante */}
       <div className="fixed bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-[#05070A] to-transparent">
         <button 
           onClick={() => setSelectedRecipe(null)}
-          className="w-full bg-indigo-600 text-white font-black py-6 rounded-[2.5rem] border-b-8 border-indigo-900 uppercase tracking-widest text-xs active:scale-95 active:border-b-0 transition-all shadow-3xl"
+          className="w-full bg-indigo-600 text-white font-black py-6 rounded-[2.5rem] border-b-8 border-indigo-900 uppercase tracking-widest text-[11px] active:scale-95 active:border-b-0 transition-all shadow-3xl"
         >
-           TERMINAR SESIÓN
+           CERRAR SESIÓN
         </button>
       </div>
     </div>
