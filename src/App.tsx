@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Clock, 
@@ -127,7 +127,6 @@ const App: React.FC = () => {
 
     const style = document.createElement('style');
     style.innerHTML = `
-      /* Reset radical para anular index.css de Vite */
       * { margin: 0; padding: 0; box-sizing: border-box !important; -webkit-tap-highlight-color: transparent; }
       body, html, #root { 
         width: 100% !important; 
@@ -150,7 +149,6 @@ const App: React.FC = () => {
 
   const Dashboard = () => (
     <div className="flex flex-col min-h-screen bg-[#05070A] overflow-x-hidden text-left">
-      {/* Header Digital */}
       <header className="px-6 pt-16 pb-6 flex justify-between items-center bg-[#0A0E1A] border-b-4 border-indigo-500/30">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 bg-cyan-400 shadow-[0_0_15px_#22d3ee] rounded-sm" />
@@ -162,7 +160,6 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Saludo Gigante */}
       <div className="px-8 pt-12 pb-4">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles size={14} className="text-cyan-400" />
@@ -174,7 +171,6 @@ const App: React.FC = () => {
         </h2>
       </div>
 
-      {/* Lista de Recetas - Titulos Grandes / Imagen 3x3 cm */}
       <div className="flex-1 px-6 space-y-6 mt-12 pb-32">
         {INITIAL_RECIPES.map((recipe) => (
           <div 
@@ -184,7 +180,7 @@ const App: React.FC = () => {
               setChecked({});
               window.scrollTo(0,0);
             }}
-            className="flex items-center justify-between p-6 bg-[#0A0E1A] rounded-[2.5rem] border-4 border-indigo-500/10 active:scale-[0.96] transition-all duration-300 relative overflow-hidden"
+            className="flex items-center justify-between p-6 bg-[#0A0E1A] rounded-[2.5rem] border-4 border-indigo-500/10 hover:border-cyan-400/50 active:scale-[0.96] transition-all duration-300 relative overflow-hidden"
           >
             <div className="absolute -right-10 -bottom-10 w-32 h-32 blur-[60px] opacity-20" style={{ backgroundColor: recipe.color }} />
 
@@ -192,7 +188,6 @@ const App: React.FC = () => {
               <span className="text-[9px] font-black tracking-[0.25em] mb-3 block" style={{ color: recipe.color }}>
                 {recipe.category}
               </span>
-              {/* TITULO MUCHO MÁS GRANDE QUE LA IMAGEN */}
               <h3 className="text-5xl font-black text-white leading-[0.85] tracking-tighter uppercase group-hover:text-cyan-400 transition-colors">
                 {recipe.title}
               </h3>
@@ -202,7 +197,6 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* IMAGEN PEQUEÑA (Efecto 3x3 cm) */}
             <div className="relative w-20 h-20 shrink-0 bg-black rounded-2xl border-2 border-white/5 overflow-hidden shadow-2xl">
               <img src={recipe.image} alt="" className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500" />
             </div>
@@ -214,7 +208,6 @@ const App: React.FC = () => {
 
   const CookingView = ({ recipe }: { recipe: Recipe }) => (
     <div className="fixed inset-0 z-50 bg-[#05070A] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom duration-500">
-      {/* Cabecera Detalle */}
       <div className="relative h-[25vh] shrink-0 bg-[#0A0E1A] border-b-8" style={{ borderBottomColor: recipe.color + '33' }}>
         <img src={recipe.image} className="w-full h-full object-cover opacity-20 blur-sm scale-110" alt="" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] to-transparent" />
@@ -233,7 +226,6 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* Cuerpo de la Receta */}
       <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12 pb-40">
         <div className="grid grid-cols-3 gap-3">
           {[
@@ -249,7 +241,6 @@ const App: React.FC = () => {
           ))}
         </div>
 
-        {/* Ingredientes con texto grande */}
         <section className="text-left">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
@@ -269,7 +260,7 @@ const App: React.FC = () => {
                 <span className={`text-xl font-bold flex-1 pr-4 ${checked[`i-${i}`] ? 'line-through text-zinc-700' : 'text-zinc-200'}`}>
                   {ing.text}
                 </span>
-                <div className={`w-8 h-8 rounded-xl border-4 shrink-0 flex items-center justify-center ${
+                <div className={`w-8 h-8 rounded-xl border-4 shrink-0 flex items-center justify-center transition-all ${
                   checked[`i-${i}`] ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_15px_#22d3ee]' : 'border-zinc-800'
                 }`}>
                   {checked[`i-${i}`] && <CheckCircle2 size={18} className="text-black stroke-[4px]" />}
@@ -279,7 +270,6 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* Pasos con texto editorial */}
         <section className="text-left">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center" style={{ color: recipe.color }}>
@@ -302,14 +292,12 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* Nota del Chef */}
         <div className="bg-[#0A0E1A] p-10 rounded-[3.5rem] border-4 border-white/5 mb-10 text-left">
            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400 mb-4 block">CHEF NOTE // SYSTEM LOG</span>
            <p className="text-zinc-500 text-xl italic font-bold leading-relaxed">"{recipe.tip}"</p>
         </div>
       </div>
 
-      {/* Botón Flotante */}
       <div className="fixed bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-[#05070A] to-transparent">
         <button 
           onClick={() => setSelectedRecipe(null)}
