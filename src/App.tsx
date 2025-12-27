@@ -8,13 +8,15 @@ import {
   BookOpen, 
   Flame,
   Filter,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react';
 
 // --- DEFINICIÓN DE TIPOS ---
 interface Ingredient {
   text: string;
   group: string;
+  kcal: number; // Calorías calculadas según el peso en la receta
 }
 
 interface Recipe {
@@ -31,7 +33,7 @@ interface Recipe {
   color: string;
 }
 
-// --- DATA TOTALMENTE DETALLADA (Orden: Matilda, Casero, Jamón) ---
+// --- DATA CON CÁLCULO CALÓRICO ESPECÍFICO ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -43,21 +45,21 @@ const INITIAL_RECIPES: Recipe[] = [
     color: "#ec4899",
     image: "Torta matilda.jpeg", 
     ingredients: [
-      { text: "3 Huevos", group: "Masa" },
-      { text: "100 gr Mantequilla derretida (4 cdas)", group: "Masa" },
-      { text: "200-400 gr Azúcar (según preferencia)", group: "Masa" },
-      { text: "2-3 cdas de Vainilla", group: "Masa" },
-      { text: "250 ml Leche tibia (1 taza)", group: "Masa" },
-      { text: "100 gr Chocolate en polvo (1 taza)", group: "Masa" },
-      { text: "280 gr Harina de trigo (2 tazas)", group: "Masa" },
-      { text: "1 cda Polvo de hornear", group: "Masa" },
-      { text: "1 cdita Bicarbonato de sodio", group: "Masa" },
-      { text: "1 pizca de Sal", group: "Masa" },
-      { text: "1 vaso de Agua", group: "Cubierta" },
-      { text: "4 cdas soperas de Maicena", group: "Cubierta" },
-      { text: "5 cdas Cacao en polvo", group: "Cubierta" },
-      { text: "3 cdas Mantequilla derretida", group: "Cubierta" },
-      { text: "200 gr Azúcar (1 taza)", group: "Cubierta" }
+      { text: "3 Huevos", group: "Masa", kcal: 210 },
+      { text: "100 gr Mantequilla derretida", group: "Masa", kcal: 717 },
+      { text: "300 gr Azúcar", group: "Masa", kcal: 1161 },
+      { text: "2-3 cdas de Vainilla", group: "Masa", kcal: 30 },
+      { text: "250 ml Leche tibia", group: "Masa", kcal: 150 },
+      { text: "100 gr Chocolate en polvo", group: "Masa", kcal: 228 },
+      { text: "280 gr Harina de trigo", group: "Masa", kcal: 1019 },
+      { text: "1 cda Polvo de hornear", group: "Masa", kcal: 5 },
+      { text: "1 cdita Bicarbonato de sodio", group: "Masa", kcal: 0 },
+      { text: "1 pizca de Sal", group: "Masa", kcal: 0 },
+      { text: "1 vaso de Agua", group: "Cubierta", kcal: 0 },
+      { text: "4 cdas soperas de Maicena", group: "Cubierta", kcal: 120 },
+      { text: "5 cdas Cacao en polvo", group: "Cubierta", kcal: 60 },
+      { text: "3 cdas Mantequilla derretida", group: "Cubierta", kcal: 300 },
+      { text: "200 gr Azúcar", group: "Cubierta", kcal: 774 }
     ],
     steps: [
       "Comenzar agregando a la licuadora los huevos y mezclarlos hasta que generen bastante espuma.",
@@ -86,12 +88,12 @@ const INITIAL_RECIPES: Recipe[] = [
     color: "#a855f7",
     image: "Pan casero.jpeg",
     ingredients: [
-      { text: "500 gr Harina de trigo", group: "Base" },
-      { text: "300 ml Agua tibia", group: "Base" },
-      { text: "15 gr Sal", group: "Base" },
-      { text: "10 gr Levadura seca", group: "Base" },
-      { text: "1/2 cucharada de Azúcar (~4g)", group: "Base" },
-      { text: "30-40 gr Manteca", group: "Grasas" }
+      { text: "500 gr Harina de trigo", group: "Base", kcal: 1820 },
+      { text: "300 ml Agua tibia", group: "Base", kcal: 0 },
+      { text: "15 gr Sal", group: "Base", kcal: 0 },
+      { text: "10 gr Levadura seca", group: "Base", kcal: 32 },
+      { text: "1/2 cucharada de Azúcar", group: "Base", kcal: 20 },
+      { text: "40 gr Manteca", group: "Grasas", kcal: 360 }
     ],
     steps: [
       "En un bol pequeño, mezclar el agua tibia con la levadura y el azúcar para activarla hasta que espume.",
@@ -117,18 +119,18 @@ const INITIAL_RECIPES: Recipe[] = [
     color: "#22d3ee",
     image: "Pan de jamon.jpeg",
     ingredients: [
-      { text: "500-800 gr Harina 000", group: "Masa" },
-      { text: "260 ml Agua", group: "Masa" },
-      { text: "60 gr Azúcar", group: "Masa" },
-      { text: "100 gr Margarina", group: "Masa" },
-      { text: "2 Huevos", group: "Masa" },
-      { text: "10 gr Levadura", group: "Masa" },
-      { text: "10 gr Sal", group: "Masa" },
-      { text: "1 Kg Jamón ahumado", group: "Relleno" },
-      { text: "250 gr Panceta (Tocineta)", group: "Relleno" },
-      { text: "150 gr Aceitunas rellenas", group: "Relleno" },
-      { text: "150 gr Pasas", group: "Relleno" },
-      { text: "Queso Crema (Opcional)", group: "Relleno" }
+      { text: "800 gr Harina 000", group: "Masa", kcal: 2912 },
+      { text: "260 ml Agua", group: "Masa", kcal: 0 },
+      { text: "60 gr Azúcar", group: "Masa", kcal: 232 },
+      { text: "100 gr Margarina", group: "Masa", kcal: 717 },
+      { text: "2 Huevos", group: "Masa", kcal: 140 },
+      { text: "10 gr Levadura", group: "Masa", kcal: 32 },
+      { text: "10 gr Sal", group: "Masa", kcal: 0 },
+      { text: "1 Kg Jamón ahumado", group: "Relleno", kcal: 1450 },
+      { text: "250 gr Panceta (Tocineta)", group: "Relleno", kcal: 1352 },
+      { text: "150 gr Aceitunas rellenas", group: "Relleno", kcal: 172 },
+      { text: "150 gr Pasas", group: "Relleno", kcal: 448 },
+      { text: "Queso Crema (Opcional)", group: "Relleno", kcal: 250 }
     ],
     steps: [
       "Comenzar agregando el azúcar en un bol con el agua y mezclar bien.",
@@ -156,6 +158,7 @@ const INITIAL_RECIPES: Recipe[] = [
 
 const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [showCalories, setShowCalories] = useState<Recipe | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   // --- ESCUDO DE ESTILOS GLOBALES ---
@@ -190,7 +193,6 @@ const App: React.FC = () => {
 
   const Dashboard = () => (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#05070A', width: '100%' }}>
-      {/* Header */}
       <header style={{ padding: '60px 24px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#0A0E1A', borderBottom: '4px solid rgba(99, 102, 241, 0.3)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '12px', height: '12px', backgroundColor: '#22d3ee', boxShadow: '0 0 15px #22d3ee' }} />
@@ -202,7 +204,6 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Saludo Ernesto */}
       <div style={{ padding: '48px 32px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
           <Sparkles size={14} color="#22d3ee" />
@@ -215,56 +216,27 @@ const App: React.FC = () => {
         </h2>
       </div>
 
-      {/* Lista de Recetas */}
       <div style={{ flex: 1, padding: '0 24px 120px', display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '32px' }}>
         {INITIAL_RECIPES.map((recipe) => (
           <div 
             key={recipe.id}
             onClick={() => { setSelectedRecipe(recipe); setChecked({}); window.scrollTo(0,0); }}
             style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between', 
-              padding: '24px', 
-              backgroundColor: '#0A0E1A', 
-              borderRadius: '40px', 
-              border: '4px solid rgba(129, 140, 248, 0.1)',
-              position: 'relative',
-              overflow: 'hidden'
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', 
+              backgroundColor: '#0A0E1A', borderRadius: '40px', border: '4px solid rgba(129, 140, 248, 0.1)',
+              position: 'relative', overflow: 'hidden'
             }}
           >
             <div style={{ flex: 1, paddingRight: '16px', position: 'relative', zIndex: 10 }}>
-              <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.25em', marginBottom: '12px', display: 'block', color: recipe.color }}>
-                {recipe.category}
-              </span>
-              <h3 style={{ fontSize: '28px', fontWeight: 900, color: 'white', lineHeight: '0.85', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
-                {recipe.title}
-              </h3>
+              <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.25em', marginBottom: '12px', display: 'block', color: recipe.color }}>{recipe.category}</span>
+              <h3 style={{ fontSize: '28px', fontWeight: 900, color: 'white', lineHeight: '0.85', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>{recipe.title}</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '24px', color: '#444', fontSize: '11px', fontWeight: 900 }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14} /> {recipe.prep}</span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Users size={14} /> {recipe.servings}</span>
               </div>
             </div>
-
-            {/* IMAGEN DE 3x3 cm (80px) */}
-            <div style={{ 
-              width: '80px', 
-              height: '80px', 
-              flexShrink: 0, 
-              backgroundColor: '#111', 
-              borderRadius: '24px', 
-              border: '2px solid rgba(255,255,255,0.05)', 
-              overflow: 'hidden' 
-            }}>
-              <img 
-                src={recipe.image} 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                alt={recipe.title}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  (e.target as HTMLImageElement).parentElement!.style.backgroundColor = recipe.color + '33';
-                }}
-              />
+            <div style={{ width: '80px', height: '80px', flexShrink: 0, backgroundColor: '#111', borderRadius: '24px', border: '2px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+              <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(0.2)' }} alt="" />
             </div>
           </div>
         ))}
@@ -272,108 +244,152 @@ const App: React.FC = () => {
     </div>
   );
 
-  const CookingView = ({ recipe }: { recipe: Recipe }) => (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ position: 'relative', height: '25vh', flexShrink: 0, backgroundColor: '#0A0E1A', borderBottom: `8px solid ${recipe.color}33` }}>
-        <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.2, filter: 'blur(4px) scale(1.1)' }} alt="" />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #05070A, transparent)' }} />
-        
-        <button 
-          onClick={() => setSelectedRecipe(null)}
-          style={{ position: 'absolute', top: '56px', left: '24px', width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.05)', border: '2px solid rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        >
-          <ArrowLeft size={24} />
-        </button>
+  const CookingView = ({ recipe }: { recipe: Recipe }) => {
+    const totalKcal = recipe.ingredients.reduce((acc, curr) => acc + curr.kcal, 0);
 
-        <div style={{ position: 'absolute', bottom: '24px', left: '32px', right: '32px' }}>
-          <h2 style={{ fontSize: '56px', fontWeight: 900, color: 'white', lineHeight: '0.8', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
-            {recipe.title}
-          </h2>
-        </div>
-      </div>
-
-      <div style={{ flex: 1, overflowY: 'auto', padding: '40px 32px 160px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '48px' }}>
-          {[
-            { icon: <Clock size={18} />, val: recipe.prep, label: 'TIEMPO' },
-            { icon: <Users size={18} />, val: recipe.servings, label: 'SIZE' },
-            { icon: <Flame size={18} />, val: recipe.difficulty, label: 'LVL' }
-          ].map((s, i) => (
-            <div key={i} style={{ backgroundColor: '#0A0E1A', border: '2px solid rgba(255,255,255,0.05)', padding: '16px', borderRadius: '24px', textAlign: 'center' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px', color: recipe.color }}>{s.icon}</div>
-              <p style={{ color: 'white', fontWeight: 900, fontSize: '14px' }}>{s.val}</p>
-              <p style={{ fontSize: '8px', fontWeight: 700, color: '#444', marginTop: '4px', letterSpacing: '0.1em' }}>{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        <section style={{ marginBottom: '48px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
-              <BookOpen size={20} />
-            </div>
-            <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>COMPONENTES</h3>
+    return (
+      <div style={{ position: 'fixed', inset: 0, zIndex: 50, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ position: 'relative', height: '25vh', flexShrink: 0, backgroundColor: '#0A0E1A', borderBottom: `8px solid ${recipe.color}33` }}>
+          <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.2, filter: 'blur(4px) scale(1.1)' }} alt="" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #05070A, transparent)' }} />
+          <button onClick={() => setSelectedRecipe(null)} style={{ position: 'absolute', top: '56px', left: '24px', width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.05)', border: '2px solid rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ArrowLeft size={24} />
+          </button>
+          <div style={{ position: 'absolute', bottom: '24px', left: '32px', right: '32px' }}>
+            <h2 style={{ fontSize: '56px', fontWeight: 900, color: 'white', lineHeight: '0.8', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>{recipe.title}</h2>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {recipe.ingredients.map((ing, i) => (
-              <div 
-                key={i} 
-                onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))}
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: '40px 32px 160px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '48px' }}>
+            {[
+              { icon: <Clock size={18} />, val: recipe.prep, label: 'TIME' },
+              { icon: <Users size={18} />, val: recipe.servings, label: 'SIZE' },
+              { icon: <Flame size={18} />, val: recipe.difficulty, label: 'LVL' }
+            ].map((s, i) => (
+              <div key={i} style={{ backgroundColor: '#0A0E1A', border: '2px solid rgba(255,255,255,0.05)', padding: '16px', borderRadius: '24px', textAlign: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px', color: recipe.color }}>{s.icon}</div>
+                <p style={{ color: 'white', fontWeight: 900, fontSize: '14px' }}>{s.val}</p>
+                <p style={{ fontSize: '8px', fontWeight: 700, color: '#444', marginTop: '4px', letterSpacing: '0.1em' }}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          <section style={{ marginBottom: '48px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
+                  <BookOpen size={20} />
+                </div>
+                <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>INGREDIENTES</h3>
+              </div>
+              
+              {/* BOTÓN DE CALORÍAS */}
+              <button 
+                onClick={() => setShowCalories(recipe)}
                 style={{ 
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', 
-                  borderRadius: '32px', border: '2px solid rgba(255,255,255,0.05)', backgroundColor: '#0A0E1A',
-                  opacity: checked[`i-${i}`] ? 0.2 : 1
+                  backgroundColor: '#05070A', border: `2px solid ${recipe.color}`, padding: '8px 16px', 
+                  borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' 
                 }}
               >
-                <span style={{ fontSize: '18px', fontWeight: 900, flex: 1, paddingRight: '16px', textDecoration: checked[`i-${i}`] ? 'line-through' : 'none' }}>{ing.text}</span>
-                <div style={{ width: '32px', height: '32px', borderRadius: '12px', border: '4px solid #222', backgroundColor: checked[`i-${i}`] ? '#22d3ee' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {checked[`i-${i}`] && <CheckCircle2 size={18} color="black" strokeWidth={4} />}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section style={{ marginBottom: '48px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
-              <Flame size={20} />
+                <Zap size={14} color={recipe.color} fill={recipe.color} />
+                <span style={{ fontSize: '12px', fontWeight: 900, color: 'white' }}>{totalKcal} KCAL</span>
+              </button>
             </div>
-            <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>EJECUCIÓN</h3>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '48px', position: 'relative', paddingLeft: '24px' }}>
-            <div style={{ position: 'absolute', left: '24px', top: '32px', bottom: '32px', width: '4px', backgroundColor: '#111', borderRadius: '2px' }} />
-            {recipe.steps.map((step, i) => (
-              <div key={i} onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))} style={{ position: 'relative', opacity: checked[`s-${i}`] ? 0.2 : 1 }}>
-                <div style={{ position: 'absolute', left: '-42px', top: '0', width: '40px', height: '40px', borderRadius: '16px', border: '4px solid #111', backgroundColor: '#05070A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 900, color: checked[`s-${i}`] ? '#22d3ee' : '#444' }}>
-                  {i + 1}
-                </div>
-                <p style={{ fontSize: '24px', fontWeight: 900, lineHeight: '1.2', paddingLeft: '40px', letterSpacing: '-0.02em' }}>{step}</p>
-              </div>
-            ))}
-          </div>
-        </section>
 
-        <div style={{ backgroundColor: '#0A0E1A', padding: '40px', borderRadius: '56px', border: '4px solid rgba(255,255,255,0.05)', textAlign: 'left' }}>
-           <span style={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', color: '#22d3ee', marginBottom: '16px', display: 'block' }}>CHEF NOTE // LOG</span>
-           <p style={{ color: '#555', fontSize: '20px', fontStyle: 'italic', fontWeight: 900, lineHeight: '1.4' }}>"{recipe.tip}"</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {recipe.ingredients.map((ing, i) => (
+                <div key={i} onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', borderRadius: '32px', border: '2px solid rgba(255,255,255,0.05)', backgroundColor: '#0A0E1A', opacity: checked[`i-${i}`] ? 0.2 : 1 }}>
+                  <span style={{ fontSize: '18px', fontWeight: 900, flex: 1, paddingRight: '16px', textDecoration: checked[`i-${i}`] ? 'line-through' : 'none' }}>{ing.text}</span>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '12px', border: '4px solid #222', backgroundColor: checked[`i-${i}`] ? '#22d3ee' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {checked[`i-${i}`] && <CheckCircle2 size={18} color="black" strokeWidth={4} />}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section style={{ marginBottom: '48px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
+                <Flame size={20} />
+              </div>
+              <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>EJECUCIÓN</h3>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '48px', position: 'relative', paddingLeft: '24px' }}>
+              <div style={{ position: 'absolute', left: '24px', top: '32px', bottom: '32px', width: '4px', backgroundColor: '#111', borderRadius: '2px' }} />
+              {recipe.steps.map((step, i) => (
+                <div key={i} onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))} style={{ position: 'relative', opacity: checked[`s-${i}`] ? 0.2 : 1 }}>
+                  <div style={{ position: 'absolute', left: '-42px', top: '0', width: '40px', height: '40px', borderRadius: '16px', border: '4px solid #111', backgroundColor: '#05070A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 900, color: checked[`s-${i}`] ? '#22d3ee' : '#444' }}>{i + 1}</div>
+                  <p style={{ fontSize: '24px', fontWeight: 900, lineHeight: '1.2', paddingLeft: '40px', letterSpacing: '-0.02em' }}>{step}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <div style={{ backgroundColor: '#0A0E1A', padding: '40px', borderRadius: '56px', border: '4px solid rgba(255,255,255,0.05)', textAlign: 'left' }}>
+             <span style={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', color: '#22d3ee', marginBottom: '16px', display: 'block' }}>CHEF NOTE // LOG</span>
+             <p style={{ color: '#555', fontSize: '20px', fontStyle: 'italic', fontWeight: 900, lineHeight: '1.4' }}>"{recipe.tip}"</p>
+          </div>
+        </div>
+
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
+          <button onClick={() => setSelectedRecipe(null)} style={{ width: '100%', backgroundColor: '#4f46e5', color: 'white', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #312e81', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}>
+             REGRESAR
+          </button>
         </div>
       </div>
+    );
+  };
 
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
-        <button 
-          onClick={() => setSelectedRecipe(null)}
-          style={{ width: '100%', backgroundColor: '#4f46e5', color: 'white', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #312e81', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}
-        >
-           REGRESAR
-        </button>
+  // --- VISTA DETALLE DE CALORÍAS ---
+  const CalorieDetailView = ({ recipe }: { recipe: Recipe }) => {
+    const total = recipe.ingredients.reduce((acc, curr) => acc + curr.kcal, 0);
+
+    return (
+      <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <header style={{ padding: '60px 24px 24px', backgroundColor: '#0A0E1A', borderBottom: '4px solid rgba(34, 211, 238, 0.2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+            <button onClick={() => setShowCalories(null)} style={{ backgroundColor: 'transparent', border: 'none', color: 'white' }}><ArrowLeft size={24} /></button>
+            <h2 style={{ fontSize: '24px', fontWeight: 900, textTransform: 'uppercase' }}>Análisis Calórico</h2>
+          </div>
+          <p style={{ fontSize: '12px', fontWeight: 900, color: recipe.color, letterSpacing: '0.1em' }}>{recipe.title}</p>
+        </header>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px 140px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {recipe.ingredients.filter(ing => ing.kcal > 0).map((ing, i) => (
+              <div key={i} style={{ padding: '24px', backgroundColor: '#0A0E1A', borderRadius: '24px', border: '2px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '16px', fontWeight: 900, color: 'rgba(255,255,255,0.6)' }}>{ing.text.split('(')[0]}</span>
+                <span style={{ fontSize: '18px', fontWeight: 900, color: '#22d3ee' }}>{ing.kcal} <small style={{ fontSize: '10px' }}>KCAL</small></span>
+              </div>
+            ))}
+          </div>
+          
+          <div style={{ marginTop: '40px', padding: '32px', backgroundColor: 'rgba(34, 211, 238, 0.05)', borderRadius: '32px', border: '2px dashed #22d3ee', textAlign: 'center' }}>
+             <p style={{ fontSize: '10px', fontWeight: 900, color: '#22d3ee', textTransform: 'uppercase', marginBottom: '8px' }}>Impacto Energético Total</p>
+             <h4 style={{ fontSize: '48px', fontWeight: 900 }}>{total} <span style={{ fontSize: '14px' }}>KCAL</span></h4>
+          </div>
+        </div>
+
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
+          <button onClick={() => setShowCalories(null)} style={{ width: '100%', backgroundColor: '#22d3ee', color: 'black', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #0891b2', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}>
+             CERRAR ANÁLISIS
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div style={{ backgroundColor: '#05070A', color: 'white', minHeight: '100vh' }}>
-      {selectedRecipe ? <CookingView recipe={selectedRecipe} /> : <Dashboard />}
+      {showCalories ? (
+        <CalorieDetailView recipe={showCalories} />
+      ) : selectedRecipe ? (
+        <CookingView recipe={selectedRecipe} />
+      ) : (
+        <Dashboard />
+      )}
     </div>
   );
 };
