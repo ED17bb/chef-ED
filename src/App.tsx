@@ -10,7 +10,9 @@ import {
   Filter,
   Sparkles,
   Zap,
-  Image as ImageIcon
+  Image as ImageIcon,
+  X,
+  Maximize2
 } from 'lucide-react';
 
 // --- DEFINICIÓN DE TIPOS ---
@@ -35,10 +37,7 @@ interface Recipe {
   color: string;
 }
 
-// ========================================================
-// ERNESTO: AQUÍ ABAJO ES DONDE CAMBIAS LOS NOMBRES DE LAS IMÁGENES
-// Asegúrate de que el archivo esté en la carpeta "public"
-// ========================================================
+// --- DATA CURADA (Matilda, Casero, Jamón) ---
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -48,8 +47,8 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "10P",
     difficulty: "Fácil",
     color: "#ec4899",
-    image: "Torta matilda.png", // <--- Cambia aquí el nombre de la foto principal
-    infographic: "infotorta.png", // <--- Cambia aquí el nombre de la infografía
+    image: "Torta matilda.jpeg", 
+    infographic: "infotorta.png",
     ingredients: [
       { text: "3 Huevos", group: "Masa", kcal: 210 },
       { text: "100 gr Mantequilla derretida (4 cdas)", group: "Masa", kcal: 717 },
@@ -92,8 +91,8 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "6U",
     difficulty: "Fácil",
     color: "#a855f7",
-    image: "Pan casero.png", // <--- Cambia aquí
-    infographic: "infopan.png", // <--- Cambia aquí
+    image: "Pan casero.jpeg",
+    infographic: "infopan.png",
     ingredients: [
       { text: "500 gr Harina de trigo", group: "Base", kcal: 1820 },
       { text: "300 ml Agua tibia", group: "Base", kcal: 0 },
@@ -124,8 +123,8 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "2P",
     difficulty: "Experto",
     color: "#22d3ee",
-    image: "Pan de jamon.png", // <--- Cambia aquí
-    infographic: "infojamon.png", // <--- Cambia aquí
+    image: "Pan de jamon.jpeg",
+    infographic: "infojamon.png",
     ingredients: [
       { text: "800 gr Harina 000", group: "Masa", kcal: 2912 },
       { text: "260 ml Agua", group: "Masa", kcal: 0 },
@@ -168,13 +167,14 @@ const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showCalories, setShowCalories] = useState<Recipe | null>(null);
   const [showInfographic, setShowInfographic] = useState<Recipe | null>(null);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   // --- ESCUDO DE ESTILOS GLOBALES ---
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = "viewport";
-    meta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0";
+    meta.content = "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes";
     document.head.appendChild(meta);
 
     const style = document.createElement('style');
@@ -199,6 +199,32 @@ const App: React.FC = () => {
       document.head.removeChild(meta);
     };
   }, []);
+
+  // --- COMPONENTE ZOOM ---
+  const ImageZoomOverlay = () => {
+    if (!zoomedImage) return null;
+    return (
+      <div 
+        style={{ 
+          position: 'fixed', inset: 0, zIndex: 1000, backgroundColor: 'rgba(0,0,0,0.95)', 
+          display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'auto'
+        }}
+        onClick={() => setZoomedImage(null)}
+      >
+        <button 
+          style={{ position: 'fixed', top: '40px', right: '24px', backgroundColor: 'white', borderRadius: '50%', padding: '12px', border: 'none', zIndex: 1001 }}
+        >
+          <X color="black" size={24} />
+        </button>
+        <img 
+          src={zoomedImage} 
+          style={{ maxWidth: 'none', width: '100%', height: 'auto', borderRadius: '8px' }} 
+          alt="Zoom"
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
+    );
+  };
 
   const Dashboard = () => (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#05070A', width: '100%' }}>
@@ -229,14 +255,16 @@ const App: React.FC = () => {
         {INITIAL_RECIPES.map((recipe) => (
           <div 
             key={recipe.id}
-            onClick={() => { setSelectedRecipe(recipe); setChecked({}); window.scrollTo(0,0); }}
             style={{ 
               display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', 
               backgroundColor: '#0A0E1A', borderRadius: '40px', border: '4px solid rgba(129, 140, 248, 0.1)',
               position: 'relative', overflow: 'hidden'
             }}
           >
-            <div style={{ flex: 1, paddingRight: '16px', position: 'relative', zIndex: 10 }}>
+            <div 
+              onClick={() => { setSelectedRecipe(recipe); setChecked({}); window.scrollTo(0,0); }}
+              style={{ flex: 1, paddingRight: '16px', position: 'relative', zIndex: 10 }}
+            >
               <span style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '0.25em', marginBottom: '12px', display: 'block', color: recipe.color }}>{recipe.category}</span>
               <h3 style={{ fontSize: '28px', fontWeight: 900, color: 'white', lineHeight: '0.85', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>{recipe.title}</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '24px', color: '#444', fontSize: '11px', fontWeight: 900 }}>
@@ -244,8 +272,18 @@ const App: React.FC = () => {
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Users size={14} /> {recipe.servings}</span>
               </div>
             </div>
-            <div style={{ width: '80px', height: '80px', flexShrink: 0, backgroundColor: '#111', borderRadius: '24px', border: '2px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+
+            <div 
+              onClick={() => setZoomedImage(recipe.image)}
+              style={{ 
+                width: '80px', height: '80px', flexShrink: 0, backgroundColor: '#111', borderRadius: '24px', 
+                border: '2px solid rgba(255,255,255,0.05)', overflow: 'hidden', position: 'relative'
+              }}
+            >
               <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(0.2)' }} alt="" />
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Maximize2 size={16} color="white" />
+              </div>
             </div>
           </div>
         ))}
@@ -259,13 +297,25 @@ const App: React.FC = () => {
     return (
       <div style={{ position: 'fixed', inset: 0, zIndex: 50, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column' }}>
         <div style={{ position: 'relative', height: '25vh', flexShrink: 0, backgroundColor: '#0A0E1A', borderBottom: `8px solid ${recipe.color}33` }}>
-          <img src={recipe.image} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.2, filter: 'blur(4px) scale(1.1)' }} alt="" />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #05070A, transparent)' }} />
-          <button onClick={() => setSelectedRecipe(null)} style={{ position: 'absolute', top: '56px', left: '24px', width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.05)', border: '2px solid rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img 
+            src={recipe.image} 
+            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.2, filter: 'blur(4px) scale(1.1)', cursor: 'zoom-in' }} 
+            alt="" 
+            onClick={() => setZoomedImage(recipe.image)}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #05070A, transparent)', pointerEvents: 'none' }} />
+          
+          <button 
+            onClick={() => setSelectedRecipe(null)}
+            style={{ position: 'absolute', top: '56px', left: '24px', width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.05)', border: '2px solid rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
             <ArrowLeft size={24} />
           </button>
+
           <div style={{ position: 'absolute', bottom: '24px', left: '32px', right: '32px' }}>
-            <h2 style={{ fontSize: '56px', fontWeight: 900, color: 'white', lineHeight: '0.8', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>{recipe.title}</h2>
+            <h2 style={{ fontSize: '56px', fontWeight: 900, color: 'white', lineHeight: '0.8', letterSpacing: '-0.05em', textTransform: 'uppercase' }}>
+              {recipe.title}
+            </h2>
           </div>
         </div>
 
@@ -284,33 +334,31 @@ const App: React.FC = () => {
             ))}
           </div>
 
-          {/* BOTÓN INFOGRAFÍA */}
           <div style={{ marginBottom: '24px' }}>
             <button 
               onClick={() => setShowInfographic(recipe)}
               style={{ 
                 width: '100%', backgroundColor: 'rgba(99, 102, 241, 0.05)', border: '2px solid rgba(99, 102, 241, 0.2)', 
-                padding: '20px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', cursor: 'pointer' 
+                padding: '20px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' 
               }}
             >
               <ImageIcon size={20} color="#818cf8" />
-              <span style={{ fontSize: '14px', fontWeight: 900, color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Ver Infografía Visual</span>
+              <span style={{ fontSize: '14px', fontWeight: 900, color: '#818cf8', textTransform: 'uppercase' }}>Ver Infografía Visual</span>
             </button>
           </div>
 
-          {/* Sección de Ingredientes */}
           <section style={{ marginBottom: '48px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
                   <BookOpen size={20} />
                 </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>INGREDIENTES</h3>
+                <h3 style={{ fontSize: '20px', fontWeight: 900, textTransform: 'uppercase' }}>INGREDIENTES</h3>
               </div>
               
               <button 
                 onClick={() => setShowCalories(recipe)}
-                style={{ backgroundColor: '#05070A', border: `2px solid ${recipe.color}`, padding: '8px 16px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                style={{ backgroundColor: '#05070A', border: `2px solid ${recipe.color}`, padding: '8px 16px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}
               >
                 <Zap size={14} color={recipe.color} fill={recipe.color} />
                 <span style={{ fontSize: '12px', fontWeight: 900, color: 'white' }}>{totalKcal} KCAL</span>
@@ -320,7 +368,7 @@ const App: React.FC = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {recipe.ingredients.map((ing, i) => (
                 <div key={i} onClick={() => setChecked(prev => ({...prev, [`i-${i}`]: !prev[`i-${i}`]}))} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', borderRadius: '32px', border: '2px solid rgba(255,255,255,0.05)', backgroundColor: '#0A0E1A', opacity: checked[`i-${i}`] ? 0.2 : 1 }}>
-                  <span style={{ fontSize: '18px', fontWeight: 900, flex: 1, paddingRight: '16px', textDecoration: checked[`i-${i}`] ? 'line-through' : 'none' }}>{ing.text}</span>
+                  <span style={{ fontSize: '18px', fontWeight: 900, flex: 1, textDecoration: checked[`i-${i}`] ? 'line-through' : 'none' }}>{ing.text}</span>
                   <div style={{ width: '32px', height: '32px', borderRadius: '12px', border: '4px solid #222', backgroundColor: checked[`i-${i}`] ? '#22d3ee' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {checked[`i-${i}`] && <CheckCircle2 size={18} color="black" strokeWidth={4} />}
                   </div>
@@ -329,20 +377,19 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          {/* Ejecución */}
           <section style={{ marginBottom: '48px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
                 <Flame size={20} />
               </div>
-              <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>EJECUCIÓN</h3>
+              <h3 style={{ fontSize: '20px', fontWeight: 900, textTransform: 'uppercase' }}>EJECUCIÓN</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '48px', position: 'relative', paddingLeft: '24px' }}>
               <div style={{ position: 'absolute', left: '24px', top: '32px', bottom: '32px', width: '4px', backgroundColor: '#111', borderRadius: '2px' }} />
               {recipe.steps.map((step, i) => (
                 <div key={i} onClick={() => setChecked(prev => ({...prev, [`s-${i}`]: !prev[`s-${i}`]}))} style={{ position: 'relative', opacity: checked[`s-${i}`] ? 0.2 : 1 }}>
                   <div style={{ position: 'absolute', left: '-42px', top: '0', width: '40px', height: '40px', borderRadius: '16px', border: '4px solid #111', backgroundColor: '#05070A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 900, color: checked[`s-${i}`] ? '#22d3ee' : '#444' }}>{i + 1}</div>
-                  <p style={{ fontSize: '24px', fontWeight: 900, lineHeight: '1.2', paddingLeft: '40px', letterSpacing: '-0.02em' }}>{step}</p>
+                  <p style={{ fontSize: '24px', fontWeight: 900, lineHeight: '1.2', paddingLeft: '40px' }}>{step}</p>
                 </div>
               ))}
             </div>
@@ -363,85 +410,63 @@ const App: React.FC = () => {
     );
   };
 
-  // --- VISTA DETALLE DE CALORÍAS ---
   const CalorieDetailView = ({ recipe }: { recipe: Recipe }) => {
     const total = recipe.ingredients.reduce((acc, curr) => acc + curr.kcal, 0);
-
     return (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column' }}>
         <header style={{ padding: '60px 24px 24px', backgroundColor: '#0A0E1A', borderBottom: '4px solid rgba(34, 211, 238, 0.2)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
             <button onClick={() => setShowCalories(null)} style={{ backgroundColor: 'transparent', border: 'none', color: 'white' }}><ArrowLeft size={24} /></button>
             <h2 style={{ fontSize: '24px', fontWeight: 900, textTransform: 'uppercase' }}>Análisis Calórico</h2>
           </div>
-          <p style={{ fontSize: '12px', fontWeight: 900, color: recipe.color, letterSpacing: '0.1em' }}>{recipe.title}</p>
         </header>
-
         <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px 140px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {recipe.ingredients.filter(ing => ing.kcal > 0).map((ing, i) => (
-              <div key={i} style={{ padding: '24px', backgroundColor: '#0A0E1A', borderRadius: '24px', border: '2px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '16px', fontWeight: 900, color: 'rgba(255,255,255,0.6)' }}>{ing.text.split('(')[0]}</span>
-                <span style={{ fontSize: '18px', fontWeight: 900, color: '#22d3ee' }}>{ing.kcal} <small style={{ fontSize: '10px' }}>KCAL</small></span>
-              </div>
-            ))}
-          </div>
+          {recipe.ingredients.filter(ing => ing.kcal > 0).map((ing, i) => (
+            <div key={i} style={{ padding: '24px', backgroundColor: '#0A0E1A', borderRadius: '24px', border: '2px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <span style={{ fontSize: '16px', fontWeight: 900, color: 'rgba(255,255,255,0.6)' }}>{ing.text.split('(')[0]}</span>
+              <span style={{ fontSize: '18px', fontWeight: 900, color: '#22d3ee' }}>{ing.kcal} KCAL</span>
+            </div>
+          ))}
           <div style={{ marginTop: '40px', padding: '32px', backgroundColor: 'rgba(34, 211, 238, 0.05)', borderRadius: '32px', border: '2px dashed #22d3ee', textAlign: 'center' }}>
-             <p style={{ fontSize: '10px', fontWeight: 900, color: '#22d3ee', textTransform: 'uppercase', marginBottom: '8px' }}>Impacto Energético Total</p>
-             <h4 style={{ fontSize: '48px', fontWeight: 900 }}>{total} <span style={{ fontSize: '14px' }}>KCAL</span></h4>
+             <h4 style={{ fontSize: '48px', fontWeight: 900 }}>{total} KCAL</h4>
           </div>
         </div>
-
-        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
-          <button onClick={() => setShowCalories(null)} style={{ width: '100%', backgroundColor: '#22d3ee', color: 'black', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #0891b2', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}>
-             REGRESAR
-          </button>
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px' }}>
+          <button onClick={() => setShowCalories(null)} style={{ width: '100%', backgroundColor: '#22d3ee', color: 'black', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none' }}>REGRESAR</button>
         </div>
       </div>
     );
   };
 
-  // --- VISTA DE INFOGRAFÍA ---
   const InfographicView = ({ recipe }: { recipe: Recipe }) => (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 120, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 120, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column' }}>
       <header style={{ padding: '60px 24px 24px', backgroundColor: '#0A0E1A', borderBottom: '4px solid rgba(129, 140, 248, 0.2)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <button onClick={() => setShowInfographic(null)} style={{ backgroundColor: 'transparent', border: 'none', color: 'white' }}><ArrowLeft size={24} /></button>
           <h2 style={{ fontSize: '24px', fontWeight: 900, textTransform: 'uppercase' }}>Infografía</h2>
         </div>
-        <p style={{ fontSize: '12px', fontWeight: 900, color: recipe.color, letterSpacing: '0.1em' }}>Mapa visual de {recipe.title}</p>
       </header>
-
-      <div style={{ flex: 1, overflowY: 'auto', backgroundColor: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ flex: 1, overflow: 'auto', backgroundColor: '#000', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '20px' }}>
         <img 
           src={recipe.infographic} 
-          alt={`Infografía de ${recipe.title}`} 
-          style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 0 40px rgba(0,0,0,0.5)' }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://placehold.co/600x800/0A0E1A/22d3ee?text=Sube+tu+imagen+.png+a+/public";
-          }}
+          style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', cursor: 'zoom-in' }} 
+          alt="Infografía" 
+          onClick={() => setZoomedImage(recipe.infographic)}
+          onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/600x800/0A0E1A/22d3ee?text=Sube+tu+imagen+.png+a+/public"; }}
         />
       </div>
-
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
-        <button onClick={() => setShowInfographic(null)} style={{ width: '100%', backgroundColor: '#818cf8', color: 'white', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #4338ca', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}>
-           REGRESAR
-        </button>
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px' }}>
+        <button onClick={() => setShowInfographic(null)} style={{ width: '100%', backgroundColor: '#818cf8', color: 'white', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none' }}>REGRESAR</button>
       </div>
     </div>
   );
 
   return (
     <div style={{ backgroundColor: '#05070A', color: 'white', minHeight: '100vh' }}>
-      {showInfographic ? (
-        <InfographicView recipe={showInfographic} />
-      ) : showCalories ? (
-        <CalorieDetailView recipe={showCalories} />
-      ) : selectedRecipe ? (
-        <CookingView recipe={selectedRecipe} />
-      ) : (
-        <Dashboard />
-      )}
+      {selectedRecipe ? <CookingView recipe={selectedRecipe} /> : <Dashboard />}
+      {showCalories && <CalorieDetailView recipe={showCalories} />}
+      {showInfographic && <InfographicView recipe={showInfographic} />}
+      <ImageZoomOverlay />
     </div>
   );
 };
