@@ -9,14 +9,15 @@ import {
   Flame,
   Filter,
   Sparkles,
-  Zap
+  Zap,
+  Image as ImageIcon
 } from 'lucide-react';
 
 // --- DEFINICIÓN DE TIPOS ---
 interface Ingredient {
   text: string;
   group: string;
-  kcal: number; // Calorías calculadas según el peso en la receta
+  kcal: number; 
 }
 
 interface Recipe {
@@ -27,13 +28,17 @@ interface Recipe {
   servings: string;
   difficulty: string;
   image: string;
+  infographic: string; 
   ingredients: Ingredient[];
   steps: string[];
   tip: string;
   color: string;
 }
 
-// --- DATA CON CÁLCULO CALÓRICO ESPECÍFICO ---
+// ========================================================
+// ERNESTO: AQUÍ ABAJO ES DONDE CAMBIAS LOS NOMBRES DE LAS IMÁGENES
+// Asegúrate de que el archivo esté en la carpeta "public"
+// ========================================================
 const INITIAL_RECIPES: Recipe[] = [
   {
     id: 'matilda',
@@ -43,15 +48,16 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "10P",
     difficulty: "Fácil",
     color: "#ec4899",
-    image: "Torta matilda.jpeg", 
+    image: "Torta matilda.png", // <--- Cambia aquí el nombre de la foto principal
+    infographic: "infotorta.png", // <--- Cambia aquí el nombre de la infografía
     ingredients: [
       { text: "3 Huevos", group: "Masa", kcal: 210 },
-      { text: "100 gr Mantequilla derretida", group: "Masa", kcal: 717 },
-      { text: "300 gr Azúcar", group: "Masa", kcal: 1161 },
+      { text: "100 gr Mantequilla derretida (4 cdas)", group: "Masa", kcal: 717 },
+      { text: "300 gr Azúcar (según preferencia)", group: "Masa", kcal: 1161 },
       { text: "2-3 cdas de Vainilla", group: "Masa", kcal: 30 },
-      { text: "250 ml Leche tibia", group: "Masa", kcal: 150 },
-      { text: "100 gr Chocolate en polvo", group: "Masa", kcal: 228 },
-      { text: "280 gr Harina de trigo", group: "Masa", kcal: 1019 },
+      { text: "250 ml Leche tibia (1 taza)", group: "Masa", kcal: 150 },
+      { text: "100 gr Chocolate en polvo (1 taza)", group: "Masa", kcal: 228 },
+      { text: "280 gr Harina de trigo (2 tazas)", group: "Masa", kcal: 1019 },
       { text: "1 cda Polvo de hornear", group: "Masa", kcal: 5 },
       { text: "1 cdita Bicarbonato de sodio", group: "Masa", kcal: 0 },
       { text: "1 pizca de Sal", group: "Masa", kcal: 0 },
@@ -59,7 +65,7 @@ const INITIAL_RECIPES: Recipe[] = [
       { text: "4 cdas soperas de Maicena", group: "Cubierta", kcal: 120 },
       { text: "5 cdas Cacao en polvo", group: "Cubierta", kcal: 60 },
       { text: "3 cdas Mantequilla derretida", group: "Cubierta", kcal: 300 },
-      { text: "200 gr Azúcar", group: "Cubierta", kcal: 774 }
+      { text: "200 gr Azúcar (1 taza)", group: "Cubierta", kcal: 774 }
     ],
     steps: [
       "Comenzar agregando a la licuadora los huevos y mezclarlos hasta que generen bastante espuma.",
@@ -86,7 +92,8 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "6U",
     difficulty: "Fácil",
     color: "#a855f7",
-    image: "Pan casero.jpeg",
+    image: "Pan casero.png", // <--- Cambia aquí
+    infographic: "infopan.png", // <--- Cambia aquí
     ingredients: [
       { text: "500 gr Harina de trigo", group: "Base", kcal: 1820 },
       { text: "300 ml Agua tibia", group: "Base", kcal: 0 },
@@ -117,7 +124,8 @@ const INITIAL_RECIPES: Recipe[] = [
     servings: "2P",
     difficulty: "Experto",
     color: "#22d3ee",
-    image: "Pan de jamon.jpeg",
+    image: "Pan de jamon.png", // <--- Cambia aquí
+    infographic: "infojamon.png", // <--- Cambia aquí
     ingredients: [
       { text: "800 gr Harina 000", group: "Masa", kcal: 2912 },
       { text: "260 ml Agua", group: "Masa", kcal: 0 },
@@ -159,6 +167,7 @@ const INITIAL_RECIPES: Recipe[] = [
 const App: React.FC = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showCalories, setShowCalories] = useState<Recipe | null>(null);
+  const [showInfographic, setShowInfographic] = useState<Recipe | null>(null);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   // --- ESCUDO DE ESTILOS GLOBALES ---
@@ -275,6 +284,21 @@ const App: React.FC = () => {
             ))}
           </div>
 
+          {/* BOTÓN INFOGRAFÍA */}
+          <div style={{ marginBottom: '24px' }}>
+            <button 
+              onClick={() => setShowInfographic(recipe)}
+              style={{ 
+                width: '100%', backgroundColor: 'rgba(99, 102, 241, 0.05)', border: '2px solid rgba(99, 102, 241, 0.2)', 
+                padding: '20px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', cursor: 'pointer' 
+              }}
+            >
+              <ImageIcon size={20} color="#818cf8" />
+              <span style={{ fontSize: '14px', fontWeight: 900, color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Ver Infografía Visual</span>
+            </button>
+          </div>
+
+          {/* Sección de Ingredientes */}
           <section style={{ marginBottom: '48px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -284,13 +308,9 @@ const App: React.FC = () => {
                 <h3 style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>INGREDIENTES</h3>
               </div>
               
-              {/* BOTÓN DE CALORÍAS */}
               <button 
                 onClick={() => setShowCalories(recipe)}
-                style={{ 
-                  backgroundColor: '#05070A', border: `2px solid ${recipe.color}`, padding: '8px 16px', 
-                  borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' 
-                }}
+                style={{ backgroundColor: '#05070A', border: `2px solid ${recipe.color}`, padding: '8px 16px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
               >
                 <Zap size={14} color={recipe.color} fill={recipe.color} />
                 <span style={{ fontSize: '12px', fontWeight: 900, color: 'white' }}>{totalKcal} KCAL</span>
@@ -309,6 +329,7 @@ const App: React.FC = () => {
             </div>
           </section>
 
+          {/* Ejecución */}
           <section style={{ marginBottom: '48px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(129, 140, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: recipe.color }}>
@@ -365,7 +386,6 @@ const App: React.FC = () => {
               </div>
             ))}
           </div>
-          
           <div style={{ marginTop: '40px', padding: '32px', backgroundColor: 'rgba(34, 211, 238, 0.05)', borderRadius: '32px', border: '2px dashed #22d3ee', textAlign: 'center' }}>
              <p style={{ fontSize: '10px', fontWeight: 900, color: '#22d3ee', textTransform: 'uppercase', marginBottom: '8px' }}>Impacto Energético Total</p>
              <h4 style={{ fontSize: '48px', fontWeight: 900 }}>{total} <span style={{ fontSize: '14px' }}>KCAL</span></h4>
@@ -374,16 +394,48 @@ const App: React.FC = () => {
 
         <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
           <button onClick={() => setShowCalories(null)} style={{ width: '100%', backgroundColor: '#22d3ee', color: 'black', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #0891b2', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}>
-             CERRAR ANÁLISIS
+             REGRESAR
           </button>
         </div>
       </div>
     );
   };
 
+  // --- VISTA DE INFOGRAFÍA ---
+  const InfographicView = ({ recipe }: { recipe: Recipe }) => (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 120, backgroundColor: '#05070A', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <header style={{ padding: '60px 24px 24px', backgroundColor: '#0A0E1A', borderBottom: '4px solid rgba(129, 140, 248, 0.2)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+          <button onClick={() => setShowInfographic(null)} style={{ backgroundColor: 'transparent', border: 'none', color: 'white' }}><ArrowLeft size={24} /></button>
+          <h2 style={{ fontSize: '24px', fontWeight: 900, textTransform: 'uppercase' }}>Infografía</h2>
+        </div>
+        <p style={{ fontSize: '12px', fontWeight: 900, color: recipe.color, letterSpacing: '0.1em' }}>Mapa visual de {recipe.title}</p>
+      </header>
+
+      <div style={{ flex: 1, overflowY: 'auto', backgroundColor: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+        <img 
+          src={recipe.infographic} 
+          alt={`Infografía de ${recipe.title}`} 
+          style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 0 40px rgba(0,0,0,0.5)' }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "https://placehold.co/600x800/0A0E1A/22d3ee?text=Sube+tu+imagen+.png+a+/public";
+          }}
+        />
+      </div>
+
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '32px', background: 'linear-gradient(to top, #05070A, transparent)' }}>
+        <button onClick={() => setShowInfographic(null)} style={{ width: '100%', backgroundColor: '#818cf8', color: 'white', fontWeight: 900, padding: '24px', borderRadius: '40px', border: 'none', borderBottom: '8px solid #4338ca', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '11px' }}>
+           REGRESAR
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div style={{ backgroundColor: '#05070A', color: 'white', minHeight: '100vh' }}>
-      {showCalories ? (
+      {showInfographic ? (
+        <InfographicView recipe={showInfographic} />
+      ) : showCalories ? (
         <CalorieDetailView recipe={showCalories} />
       ) : selectedRecipe ? (
         <CookingView recipe={selectedRecipe} />
